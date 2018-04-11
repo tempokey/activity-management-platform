@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edudigital.cloudy.amp.camp.custom.mapper.MatchScoreMapper">
+
+	<select id="listMatchScore" resultType="MatchScorePO">
+		SELECT
+			cru.o_id AS stuId,
+			sms.score AS score,
+			cru.`name` AS stuName,
+			cru.stu_num AS stuNum,
+			m1.major_name AS majorType,
+			m2.major_name AS majorName,
+			cru.start_year AS beginYear,
+			c.class_name AS className,
+			sms.challenge_num AS chalgNum,
+			sms.last_time AS lastTime
+		FROM
+			ec_skill_match_final AS sms
+		LEFT JOIN 
+			cs_reg_user AS cru ON cru.o_id = sms.stu_id
+		LEFT JOIN 
+			ec_class AS c ON c.id = cru.class_id
+		LEFT JOIN 
+			ec_major AS m2 ON m2.id = cru.career_id
+		LEFT JOIN 
+			ec_major AS m1 ON m1.id = m2.p_id
+		LEFT JOIN 
+			ec_skill_match AS sm ON sm.id = sms.match_id
+		LEFT JOIN
+			ec_skill_match_items AS smi ON smi.id = sm.item_id
+		<where>
+			sms.state='1'
+			<if test="matchId != null and matchId > 0">
+				AND sms.match_id = #{matchId} 
+			</if>
+			<if test="itemId != null and itemId > 0">
+				AND smi.id = #{itemId}
+			</if>
+		</where>
+		ORDER BY
+		sms.score DESC,sms.stu_id
+		LIMIT #{page},#{size}
+	</select>
+	
+	<select id="countMatchScore" resultType="INTEGER">
+		SELECT
+			COUNT(*) AS num
+		FROM
+			ec_skill_match_final AS sms
+		LEFT JOIN 
+			cs_reg_user AS cru ON cru.o_id = sms.stu_id
+		LEFT JOIN 
+			ec_class AS c ON c.id = cru.class_id
+		LEFT JOIN 
+			ec_major AS m2 ON m2.id = cru.career_id
+		LEFT JOIN 
+			ec_major AS m1 ON m1.id = m2.p_id
+		LEFT JOIN 
+			ec_skill_match AS sm ON sm.id = sms.match_id
+		LEFT JOIN
+			ec_skill_match_items AS smi ON smi.id = sm.item_id
+		<where>
+			sms.state='1'
+			<if test="matchId != null and matchId > 0">
+				AND sms.match_id = #{matchId} 
+			</if>
+			<if test="itemId != null and itemId > 0">
+				AND smi.id = #{itemId}
+			</if>
+		</where>
+	</select>
+
+</mapper>

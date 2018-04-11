@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active: prod
+#    active: prodbk
+#    active: dev
+#    active: devbk

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edudigital.cloudy.amp.order.service.mapper.OrderMapper">
+
+	<sql id="ordersql">
+		o.parent_id AS "parentId",
+		o.project_id AS "projectId",
+		o.project AS "project",
+		o.order_no AS "orderNo",
+		o.flow_no AS "flowNo",
+		o.out_flow_no AS "outFlowNo",
+		o.product_id AS "productId",
+		o.ad_code AS
+		"adCode",
+		o.user_id AS "userId",
+		o.context AS "context",
+		o.method AS
+		"method",
+		o.price AS "price",
+		o.refund AS "refund",
+		o.status AS "status",
+		o.result AS "result",
+		o.create_time AS "createTime",
+		o.pay_time AS
+		"payTime",
+		o.update_time AS "updateTime",
+		o.commit_time AS "commitTime",
+		o.refund_time AS "refundTime",
+		o.close_time AS "closeTime",
+		o.mark AS
+		"mark",
+		o.create_by AS "createBy",
+		o.create_date AS "createDate",
+		o.update_by AS "updateBy",
+		o.update_date AS "updateDate",
+		o.remarks AS
+		"remarks",
+		o.del_flag AS "delFlag"
+	</sql>
+
+	<insert id="add" useGeneratedKeys="true" keyProperty="Id">
+		<selectKey keyProperty="Id" resultType="int" order="BEFORE">
+			SELECT
+			max(id) + 1 as Id FROM dc_order
+		</selectKey>
+		INSERT INTO dc_order(
+		id,
+		parent_id,
+		project_id,
+		project,
+		order_no,
+		flow_no,
+		out_flow_no,
+		product_id,
+		ad_code,
+		user_id,
+		context,
+		method,
+		price,
+		refund,
+		status,
+		result,
+		create_time,
+		pay_time,
+		update_time,
+		commit_time,
+		refund_time,
+		close_time,
+		mark,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag
+		) VALUES (
+		#{Id},
+		#{o.parentId},
+		#{o.projectId},
+		#{o.project},
+		#{o.orderNo},
+		#{o.flowNo},
+		#{o.outFlowNo},
+		#{o.productId},
+		#{o.adCode},
+		#{o.userId},
+		#{o.context},
+		#{o.method},
+		#{o.price},
+		#{o.refund},
+		#{o.status},
+		#{o.result},
+		#{o.createTime},
+		#{o.payTime},
+		#{o.updateTime},
+		#{o.commitTime},
+		#{o.refundTime},
+		#{o.closeTime},
+		#{o.mark},
+		#{o.createBy},
+		#{o.createDate},
+		#{o.updateBy},
+		#{o.updateDate},
+		#{o.remarks},
+		#{o.delFlag}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE dc_order SET
+		<if test="o.parentId != null and o.parentId != ''">
+			parent_id = #{o.parentId},
+		</if>
+		<if test="o.projectId != null and o.projectId != ''">
+			project_id = #{o.projectId},
+		</if>
+		<if test="o.project != null and o.project != ''">
+			project = #{o.project}
+		</if>
+		<if test="o.orderNo != null and o.orderNo != ''">
+			order_no = #{o.orderNo},
+		</if>
+		<if test="o.flowNo != null and o.flowNo != ''">
+			flow_no = #{o.flowNo},
+		</if>
+		<if test="o.outFlowNo != null and o.outFlowNo != ''">
+			out_flow_no = #{o.outFlowNo},
+		</if>
+		<if test="o.productId != null and o.productId != ''">
+			product_id = #{o.productId},
+		</if>
+		<if test="o.adCode != null and o.adCode != ''">
+			ad_code = #{o.adCode},
+		</if>
+		<if test="o.userId != null and o.userId > 0 ">
+			user_id = #{o.userId},
+		</if>
+		<if test="o.context != null and o.context != ''">
+			context = #{o.context},
+		</if>
+		<if test="o.method != null and o.method != ''">
+			method = #{o.method},
+		</if>
+		<if test="o.price != null and o.price != ''">
+			price = #{o.price},
+		</if>
+		<if test="o.refund != null and o.refund != ''">
+			refund = #{o.refund},
+		</if>
+		<if test="o.status != null and o.status != ''">
+			status = #{o.status},
+		</if>
+		<if test="o.result != null and o.result != ''">
+			result = #{o.result},
+		</if>
+		<if test="o.createTime != null">
+			create_time = #{o.createTime},
+		</if>
+		<if test="o.payTime != null">
+			pay_time = #{o.payTime},
+		</if>
+		<if test="o.commitTime != null">
+			commit_time = #{o.commitTime},
+		</if>
+		<if test="o.refundTime != null">
+			refund_time = #{o.refundTime},
+		</if>
+		<if test="o.closeTime != null">
+			close_time = #{o.closeTime},
+		</if>
+		<if test="o.mark != null and o.mark != ''">
+			mark = #{o.mark},
+		</if>
+		<if test="o.remarks != null and o.remarks != ''">
+			remarks = #{o.remarks},
+		</if>
+		update_time = #{o.updateTime}
+		<where>
+			<if test="o.Id != null and o.Id > 0 ">
+				AND id = #{o.Id}
+			</if>
+			<if test="o.flowNo != null and o.flowNo != ''">
+				AND flow_no = #{o.flowNo}
+			</if>
+			<if test="o.outFlowNo != null and o.outFlowNo != ''">
+				AND out_flow_no = #{o.outFlowNo}
+			</if>
+		</where>
+	</update>
+
+	<select id="list" resultType="OrderPO">
+		SELECT
+		<include refid="ordersql" />
+		FROM
+		dc_order AS o
+		<where>
+			<if test="o.orderNo != null and o.orderNo != ''">
+				AND o.order_no = #{o.orderNo}
+			</if>
+			<if test="o.flowNo != null and o.flowNo != ''">
+				AND o.flow_no = #{o.flowNo}
+			</if>
+			<if test="o.outFlowNo != null and o.outFlowNo != ''">
+				AND o.out_flow_no = #{o.outFlowNo}
+			</if>
+			<if test="o.project != null and o.project != ''">
+				AND o.project AS #{o.project}
+			</if>
+		</where>
+	</select>
+
+	<select id="getOrderBy" resultType="OrderPO">
+		SELECT
+		<include refid="ordersql" />
+		FROM
+		dc_order o
+		<where>
+			<if test="o.productId != null and o.productId != ''">
+			o.product_id = #{o.productId}
+			</if>
+			<if test="o.adCode != null and o.adCode != ''">
+			AND o.ad_code = #{o.adCode}
+			</if>
+			<if test="o.userId != null and o.userId > 0 ">
+			AND o.user_id = #{o.userId}
+			</if>
+			<if test="o.method != null and o.method != ''">
+			AND o.method = #{o.method}
+			</if>
+			<if test="o.startTime != null and o.startTime != '' and o.endTime != null and o.endTime != '' ">
+			AND ( o.create_time BETWEEN #{o.startTime} AND #{o.endTime} )
+			</if>
+		</where>
+
+	</select>
+
+</mapper> 

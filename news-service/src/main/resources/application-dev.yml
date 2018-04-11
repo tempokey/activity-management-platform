@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: news-service
+  datasource:
+    url: jdbc:mysql://192.168.1.236:3306/amp?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: 1qaz@WSX
+    driver-class-name: com.mysql.jdbc.Driver
+  data:
+    mongodb:
+      uri: mongodb://192.168.1.236:27017/news
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+mybatis:
+  mapper-locations: classpath*:mappers/*Mapper.xml
+  config: classpath:config/mybatis-config.xml
+  type-aliases-package: com.edudigital.cloudy.amp.news.service.entity.po
+server:
+  port: 8760
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://registration-center:8751/registration-center/eureka/,http://registration-center-bk:8752/registration-center/eureka/
+    healthcheck:
+      enabled: false
+  instance:
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+    statusPageUrlPath: /news-service/info
+    healthCheckUrlPath: /news-service/health

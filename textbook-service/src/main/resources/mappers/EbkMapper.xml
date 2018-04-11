@@ -1,0 +1,1391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edudigital.cloudy.amp.textbook.service.mapper.EbkMapper">
+	<sql id="bksql">
+		b.attachment AS attachment,
+		b.author_id AS authorId,
+		b.book AS book,
+		b.book_id AS bookId,
+		b.brief AS brief,
+		b.major_id AS majorId,
+		b.cover AS cover,
+		b.create_by AS createBy,
+		b.create_date AS createDate,
+		b.create_time AS createTime,
+		b.del_flag AS delFlag,
+		b.divide AS divide,
+		b.mark AS mark,
+		b.num AS num,
+		b.length AS length,
+		b.path AS path,
+		b.press_id AS pressId,
+		b.price AS price,
+		b.remarks AS remarks,
+		b.sale AS sale,
+		b.`status` AS `status`,
+		b.type_id AS typeId,
+		b.update_by AS updateBy,
+		b.update_date AS updateDate,
+		b.version AS version,
+		b.tb_parent_id AS tbParentId
+	</sql>
+	<sql id="wksql">
+		b.attachment AS wkAttachment,
+		b.author_id AS wkAuthorId,
+		b.book AS wkBook,
+		b.book_id AS wkBookId,
+		b.brief AS wkBrief,
+		b.major_id AS wkMajorId,
+		b.cover AS wkCover,
+		b.create_by AS wkCreateBy,
+		b.create_date AS wkCreateDate,
+		b.create_time AS wkCreateTime,
+		b.del_flag AS wkDelFlag,
+		b.divide AS wkDivide,
+		b.mark AS wkMark,
+		b.num AS wkNum,
+		b.length AS wkLength,
+		b.path AS wkPath,
+		b.press_id AS wkPressId,
+		b.price AS wkPrice,
+		b.remarks AS wkRemarks,
+		b.sale AS wkSale,
+		b.`status` AS `wkStatus`,
+		b.type_id AS wkTypeId,
+		b.update_by AS wkUpdateBy,
+		b.update_date AS wkUpdateDate,
+		b.version AS wkVersion,
+		b.tb_parent_id AS wkTbParentId
+	</sql>	
+	
+	<sql id="bkdatasql">
+		d.id AS id,
+		d.data_code AS dataCode,
+		d.book_id AS bookId,
+		d.type AS type,
+		d.content AS content,
+		d.pageno AS pageno,
+		d.parent_id AS parent_id,
+		d.test AS test,
+		d.remark AS remark
+	</sql>
+	
+	<sql id="testsql">
+		t.id AS id,
+		t.test_code AS testCode,
+		t.parent_id AS parentId,
+		t.data_code AS dataCode,
+		t.subject_type AS subjectType,
+		t.question AS question,
+		t.body AS body,
+		t.answer AS answer,
+		t.analysis AS analysis,
+		t.score AS score,
+		t.remark AS remark
+	</sql>
+	
+	
+	<sql id="askSql">
+		a.ask_code AS askCode,
+		a.ask AS ask,
+		a.content AS content,
+		a.answer AS answer,
+		a.instruction AS instruction,
+		a.question_id AS questionId
+	</sql>
+	
+	<sql id="questionSql">
+		q.id AS id,
+		q.question_id AS questionId,
+		q.question AS question,
+		q.type AS type,
+		q.resolution AS resolution,
+		q.context_id AS contextId,
+		q.context_id AS contextId,
+		q.create_time AS createTime,
+		q.update_time AS updateTime
+	</sql>
+	
+	<sql id="majorSql">
+		c.id AS id,
+		c.major_num AS majorNum,
+		c.major AS major
+	</sql>
+	
+	<sql id="periodSql">
+		p.id AS id,
+		p.period_code AS periodCode,
+		p.period AS period,
+		p.period_stamp AS periodStamp
+	</sql>
+
+	<sql id="typeSql">
+		t.type_id AS typeId,
+		t.type AS type	
+	</sql>
+
+	
+	<resultMap type="AskPO" id="askMap">
+		<id column="askCode" property="askCode"/>
+		<result column="ask" property="ask"/>
+		<result column="content" property="content"/>
+		<result column="answer" property="answer"/>
+		<result column="instruction" property="instruction"/>
+		<result column="questionId" property="questionId"/>
+		<result column="createTime" property="createTime"/>
+		<result column="updateTime" property="updateTime"/>
+	</resultMap>
+	
+	<resultMap type="QuestionPO" id="questionMap">
+		<id column="questionId" property="questionId"/>
+		<result column="question" property="question"/>
+		<result column="type" property="type"/>
+		<result column="resolution" property="resolution"/>
+		<result column="contextId" property="contextId"/>
+		<result column="createTime" property="createTime"/>
+		<result column="updateTime" property="updateTime"/>
+		<collection property="asks" resultMap="askMap"/>
+	</resultMap>
+
+	<select id="getEbkSaledNums" resultMap="EbkMap">
+		SELECT
+			b.book_Id AS bookId,
+			b.book AS book,
+			b.num AS num
+		FROM 
+			dc_user AS u
+		LEFT JOIN 
+			eb_user_book_rel AS ubr 	
+		ON 
+			u.id = ubr.user_id
+		LEFT JOIN 
+			eb_book AS b 				
+		ON 
+			ubr.book_Id = b.book_id
+		<where>
+			<if test="user.name != null and user.name != ''">
+				AND u.name = #{user.name}
+			</if>
+		</where>
+	</select>
+	
+	<resultMap type="EbkPO" id="EbkMap">
+		<id column="bookId" property="bookId" />
+		<result column="book" property="book" />
+		<result column="majorId" property="majorId" />
+		<result column="authorId" property="authorId"/>
+		<result column="author" property="author"/>
+		<result column="pressId" property="pressId" />
+		<result column="cover" property="cover" />
+		<result column="brief" property="brief"/>
+		<result column="price" property="price" />
+		<result column="sale" property="sale" />
+		<result column="divide" property="divide" />
+		<result column="path" property="path" />
+		<result column="status" property="status" />
+		<result column="mark" property="mark" />
+		<result column="num" property="num" />
+		<result column="version" property="version"/>
+		<result column="attachment" property="attachment"/>
+		<result column="length" property="length"/>
+		<result column="typeId" property="typeId"/>
+		<result column="type" property="type"/>
+		<result column="stamp" property="stamp"/>
+		<result column="createTime" property="createTime"/>
+		<result column="create_by" property="createBy" />
+		<result column="create_date" property="createDate" />
+		<result column="update_by" property="updateBy" />
+		<result column="update_date" property="updateDate" />
+		<result column="remarks" property="remarks" />
+		<result column="del_flag" property="delFlag" />
+		<result column="type" property="type"/>
+		<result column="tbParentId" property="tbParentId"/>
+	</resultMap>	
+	
+	<select id="listBooks" resultMap="EbkMap">
+		SELECT
+			m.*,
+			IF (s.ub_rel_id > 0, 1, 0) AS buy
+		FROM
+		(
+			SELECT
+				<include refid="bksql"/>,
+				u.name AS author,
+				p.press AS press,
+				c.major AS major,
+				t.type AS type
+			FROM
+				dc_group AS g
+			LEFT JOIN 
+				dc_group_school_rel AS gs ON g.group_id = gs.group_id
+			LEFT JOIN 
+				dc_user AS u ON gs.school_id = u.school_id
+			LEFT JOIN 
+				eb_book AS b ON u.id = b.author_id
+			LEFT JOIN
+				eb_press AS p ON b.press_id = p.press_id
+			LEFT JOIN
+				eb_major AS c ON b.major_id = c.id
+			LEFT JOIN 
+				eb_type AS t ON b.type_id = t.type_id
+			<where>
+				u.type = 1 AND u.tb_parent_id != 3 AND u.tb_parent_id != 4
+				<if test="g.g.groupId != null and g.g.groupId > 0">
+					AND g.group_id = #{g.groupId}
+				</if>					
+				<if test="e.majorId != null and e.majorId > 0">
+					AND	b.major_id = #{e.majorId}
+				</if>				
+				<if test="e.book != null and e.book != ''">
+					AND	b.book like '%${e.book}%' 
+				</if>			
+			</where>
+		) AS m
+		LEFT JOIN (
+			SELECT
+				ub2.*
+			FROM
+				eb_user_book_rel AS ub2
+			<where>
+				<if test="u.adCode != null and u.adCode != ''">
+					AND ub2.ad_code = #{u.adCode}
+				</if>
+			</where>
+		) AS s ON m.bookId = s.book_Id		
+		<where>
+				m.book IS NOT NULL
+		</where>	
+	</select>
+	
+	<resultMap type="EbkAO" id="EwbkMap">	
+		<id column="wkBookId" property="bookId" />
+		<result column="wkBook" property="book" />
+		<result column="wkMajorId" property="majorId" />
+		<result column="wkAuthor" property="author"/>
+		<result column="wkPress" property="press" />
+		<result column="wkCover" property="cover" />
+		<result column="wkBrief" property="brief"/>
+		<result column="wkPrice" property="price" />
+		<result column="wkSale" property="sale" />
+		<result column="wkPath" property="path" />
+		<result column="wkType" property="type"/>
+		<result column="wkTypeId" property="typeId"/>
+		<result column="wkRemarks" property="remarks" />
+		<result column="wkType" property="type"/>		
+		<result column="wkTbParentId" property="tbParentId"/>
+		<result column="buy" property="buy"/>
+		<collection property="listEbkAO" resultMap="EbookMap"></collection>
+	</resultMap>
+	<resultMap type="EbkAO" id="EbookMap">
+		<id column="bookId" property="bookId" />
+		<result column="book" property="book" />
+		<result column="majorId" property="majorId" />
+		<result column="author" property="author"/>
+		<result column="press" property="press" />
+		<result column="cover" property="cover" />
+		<result column="brief" property="brief"/>
+		<result column="price" property="price" />
+		<result column="sale" property="sale" />
+		<result column="path" property="path" />
+		<result column="type" property="type"/>		
+		<result column="typeId" property="typeId"/>
+		<result column="remarks" property="remarks" />
+		<result column="type" property="type"/>		
+		<result column="tbParentId" property="tbParentId"/>
+	</resultMap>
+	<select id="listWorkBooks" resultMap="EwbkMap">
+		SELECT
+			m.*,
+			p.press AS press,
+			t.type AS type,
+			<include refid="bksql"/>,
+			IF (s.ub_rel_id > 0, 1, 0) AS buy
+		FROM
+		(
+			SELECT
+				<include refid="wksql"/>,
+				u.name AS wkAuthor,
+				p.press AS wkPress,
+				c.major AS wkMajor,
+				t.type AS wkType
+			FROM
+				dc_group AS g
+			LEFT JOIN 
+				dc_group_school_rel AS gs ON g.group_id = gs.group_id
+			LEFT JOIN 
+				dc_user AS u ON gs.school_id = u.school_id
+			LEFT JOIN 
+				eb_book AS b ON u.id = b.author_id
+			LEFT JOIN
+				eb_press AS p ON b.press_id = p.press_id
+			LEFT JOIN
+				eb_major AS c ON b.major_id = c.id
+			LEFT JOIN 
+				eb_type AS t ON b.type_id = t.type_id
+			<where>
+				u.type = 1 AND	b.tb_parent_id = 0
+				<if test="g.groupId != null and g.groupId > 0">
+					AND g.group_id = #{g.groupId}
+				</if>									
+				<if test="e.majorId != null and e.majorId > 0">
+					AND	b.major_id = #{e.majorId}
+				</if>			
+				<if test="e.book != null and e.book != ''">
+					AND b.book like '%${e.book}%' 
+				</if>
+			</where>
+		) AS m
+		LEFT JOIN (
+			SELECT
+				ub2.*
+			FROM
+				eb_user_book_rel AS ub2
+			<where>
+				<if test="u.id != null and u.id > 0">
+					AND ub2.user_id = #{u.id}
+				</if>
+			</where>
+		) AS s ON m.wkBookId = s.book_Id
+		LEFT JOIN 
+			eb_book AS b ON m.wkBookId  = b.tb_parent_id	
+		LEFT JOIN
+			eb_press AS p ON b.press_id = p.press_id
+		LEFT JOIN
+			eb_major AS c ON b.major_id = c.id
+		LEFT JOIN 
+			eb_type AS t ON b.type_id = t.type_id
+	</select>
+	
+	<select id="listBooksByAuthor" resultMap="EbkMap">
+		SELECT
+			<include refid="bksql"/>,
+			u.`name` AS author,
+			c.major AS major,
+			t.type AS type
+		FROM
+			eb_book AS b
+		LEFT JOIN
+			dc_user AS u ON b.author_id = u.id
+		LEFT JOIN
+			eb_major AS c ON b.major_id = c.id
+		LEFT JOIN
+			eb_type AS t ON b.type_id = t.type_id
+		<where>
+			<if test="e.bookId != null and e.bookId > 0">
+				AND b.book_Id = #{e.bookId}
+			</if>
+			<choose>
+    			<when test="u.type != null and u.type == 1">
+      				<if test="u.id != null and u.id > 0">
+						AND b.author_id = #{u.id}
+					</if>
+   				</when>
+    			<when test="u.type != null and u.type == 3">
+    			</when>
+    			<otherwise>
+     				 AND u.type != 2
+    			</otherwise>
+  			</choose>
+		</where>
+			<if test="start != null and size != null">
+			LIMIT ${start},#{size}
+			</if>
+	</select>
+	
+	
+	<insert id="addEbk" useGeneratedKeys="true" keyProperty="b.bookId">
+		INSERT eb_book(
+			book_id,
+			book,
+			major_id,
+			author_id,
+			press_id,
+			type_id,
+			cover,
+			brief,
+			price,
+			sale,
+			divide,
+			path,
+			status,
+			mark,
+			num,
+			version,
+			attachment,
+			length,
+			create_time,
+			update_time,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		)VALUES(
+			#{b.bookId},
+			#{b.book},
+			#{b.majorId},
+			#{b.authorId},
+			#{b.pressId},
+			#{b.typeId},
+			#{b.cover},
+			#{b.brief},
+			#{b.price},
+			#{b.sale},
+			#{b.divide},
+			#{b.path},
+			#{b.status},
+			#{b.mark},
+			#{b.num},
+			#{b.version},
+			#{b.attachment},
+			#{b.length},
+			#{b.createTime},
+			#{b.updateTime},
+			#{b.createBy},
+			#{b.createDate},
+			#{b.updateBy},
+			#{b.updateDate},
+			#{b.remarks},
+			#{b.delFlag}
+		)
+		
+	</insert>
+
+	<select id="getUserBook" resultType="EbkPO">
+		SELECT
+			<include refid="bksql"/>
+		FROM
+			dc_user AS u
+		LEFT JOIN 
+			eb_user_book_rel AS ub 
+			ON u.ad_code = ub.ad_code
+		LEFT JOIN 
+			eb_book AS b 
+			ON ub.book_id = b.book_id
+		<where>
+			<if test="u.type != null and u.type > 0">
+				AND u.type = #{u.type}	
+			</if>
+			<!-- <if test="u.adCode != null and u.adCode != ''">
+				AND u.ad_code = #{u.adCode}
+			</if> -->
+			<if test="b.bookId != null and b.bookId > 0">
+				AND b.book_id = #{b.bookId}
+			</if>
+			<if test="u.Id != null and u.Id > 0">
+				AND u.id = #{u.Id}
+			</if>fv
+		</where>
+	</select>
+	
+	<insert id="addUserBook" useGeneratedKeys="true" keyProperty="ub.ubRelId">
+		INSERT INTO eb_user_book_rel(
+			ub_rel_id,
+			user_id,
+			ad_code,
+			book_id
+		)SELECT 
+			#{ub.ubRelId},
+			#{ub.userId},
+			#{ub.adCode},
+			#{ub.bookId}
+		FROM DUAL
+		WHERE NOT EXISTS( 
+			SELECT ub.ub_rel_id
+			FROM eb_user_book_rel AS ub
+			LEFT JOIN dc_user AS u ON ub.user_id = u.id
+			<where>
+				<if test="ub.userId != null and ub.userId > 0">
+					AND ub.user_id = #{ub.userId}
+				</if>
+				<if test="ub.adCode != null and ub.adCode != ''">
+					AND u.ad_code = #{ub.adCode}
+				</if>
+				<if test="ub.bookId != null and ub.bookId > 0">
+					AND ub.book_Id = #{ub.bookId}
+				</if>
+			</where>
+		)
+	</insert>
+	
+	<select id="listEbkData" resultType="EbkDataPO">
+		SELECT
+			<include refid="bkdatasql"/>
+		FROM
+			eb_data as d
+		<where>
+			<if test="d.bookId != null and d.bookId > 0">
+				AND d.book_id = #{d.bookId}
+			</if>
+		</where>
+	</select>
+	
+	
+	<resultMap type="SectionAO" id="sectionMap">
+		<result column="ecContextId" property="contextId"/>
+		<result column="section" property="section"/>
+		<result column="ecParentId" property="parentId"/>
+	</resultMap>
+	
+	<resultMap type="ChapterAO" id="chapterMap">
+		<result column="bookId" property="bookId"/>
+		<result column="chapter" property="chapter"/>		
+		<result column="contextId" property="contextId"/>
+		<result column="parentId" property="parentId"/>
+		<collection property="sections" resultMap="sectionMap"/>
+	</resultMap>
+	
+	<select id="listContents2" resultMap="chapterMap">
+		SELECT
+			e.context_id AS contextId,
+			e.context AS chapter,
+			e.book_Id AS bookId,
+			e.parent_id AS parentId,
+			ec.context AS section,
+			ec.context_id AS ecContextId,
+			ec.parent_id AS ecParentId			
+		FROM
+			eb_context AS e
+		LEFT JOIN eb_context AS ec ON ec.parent_id = e.context_id 
+		<where>
+			e.type = 1
+			<if test="b.bookId != null and b.bookId > 0">AND e.book_id = #{b.bookId}</if>
+		</where>	
+		ORDER BY e.weight,ec.weight
+	</select>
+	
+	<select id="listContents" resultMap="chapterMap">
+		SELECT
+			0  AS 'contextId',
+			c.bookId AS bookId,
+			c.chapter AS chapter,
+			s.section AS section
+		FROM
+		(
+			SELECT
+				d.book_id AS bookId,
+				d.data_code AS id,
+				d.content AS chapter
+			FROM
+				eb_data AS d
+			<where>
+					d.type = 1
+				<if test="b.bookId != null and b.bookId > 0">
+					AND d.book_id = #{b.bookId}
+				</if>
+			</where>
+		) AS c
+		LEFT JOIN (
+			SELECT
+				d.parent_id AS pId,
+				d.content AS section
+			FROM
+				eb_data AS d
+			WHERE
+				d.type = 2
+		) AS s ON c.id = s.pId
+	</select>
+	
+	<select id="listTest" resultType="TestPO">
+		SELECT
+			<include refid="testsql"/>
+		FROM
+			eb_book AS b
+		LEFT JOIN 
+			eb_data AS d ON b.book_Id = d.book_id
+		LEFT JOIN 
+			eb_test AS t ON d.data_code = t.data_code
+		<where>
+			<if test="b.bookId != null and b.bookId > 0">
+				AND b.book_Id = #{b.bookId}
+			</if>
+			AND t.test_code IS NOT NULL
+		</where>
+	</select>
+	
+	
+	<insert id="addContext" useGeneratedKeys="true" keyProperty="c.contextId">
+		INSERT INTO eb_context(
+			book_Id,
+			context,
+			`order`,
+			type,
+			parent_id,
+			weight,
+			create_time,
+			update_time
+		)VALUES( 
+			#{c.bookId},
+			#{c.context},
+			#{c.order},
+			#{c.type},
+			#{c.parentId},
+			(SELECT IF(ISNULL(MAX(weight)),0,MAX(weight)+1)
+				FROM
+				eb_context a
+				WHERE a.book_Id = #{c.bookId} AND a.type = #{c.type} AND a.parent_id = #{c.parentId}),
+			#{c.createTime},
+			#{c.updateTime}
+		)
+	</insert>
+	
+	<select id="listContexts" resultType="ContextPO">
+		SELECT *
+		FROM eb_context AS c
+		<where>
+			<if test="b.bookId != null and b.bookId > 0">
+				AND c.book_Id = #{b.bookId}
+			</if>
+		</where>
+	</select>
+	
+	<resultMap type="contextPo" id="lcMap">
+		<result column="contextId" property="contextId"/>
+		<result column="context" property="context"/>
+	</resultMap>
+	
+	<select id="listChapterContexts" resultMap="lcMap" >
+		SELECT
+			a.context_id AS contextId,
+			a.context AS context
+		FROM
+			eb_context AS a
+		<where>
+			<if test="c.bookId != null and c.bookId > 0">
+				AND a.book_Id = #{c.bookId}
+			</if>
+				AND a.parent_id = #{c.parentId}		
+		</where>	
+		ORDER BY
+			a.weight ASC
+		<if test="start != null and size != null">
+		LIMIT ${start},#{size}
+		</if>
+	</select>
+	
+	<select id="listQuestions" resultMap="questionMap">
+		SELECT 
+			<include refid="questionSql"/>,
+			<include refid="askSql"/>
+		FROM 
+			eb_question AS q
+		LEFT JOIN 
+			eb_ask AS a
+		ON q.question_id = a.question_code
+		<where>
+			<if test="q.questionId != null and q.questionId > 0">
+				AND q.question_id = #{q.questionId}
+			</if>
+			<if test="q.contextId != null and q.contextId > 0">
+				AND q.context_id = #{q.contextId}
+			</if>
+			<if test="q.question != null and q.question != ''">
+				AND q.question = #{q.question}
+			</if>
+			<if test="q.periodId != null and q.periodId > 0">
+				AND q.period_id = #{q.periodId}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="addQuestion" useGeneratedKeys="true" keyProperty="q.questionCode">
+		INSERT INTO eb_question (
+			id,
+			question_id,
+			question,
+			type,
+			period_id,
+			resolution,
+			context_id,
+			context_id,
+			create_time,
+			update_time
+		)VALUES(
+			<include refid="com.edudigital.cloudy.amp.textbook.service.mapper.CommonMapper.uuid"/>,
+			#{q.questionId},
+			#{q.question},
+			#{q.type},
+			#{q.periodId},
+			#{q.resolution},
+			#{q.contextId},
+			#{q.contextId},
+			#{q.createTime},
+			#{q.updateTime}
+		)
+		<!-- FROM DUAL
+		WHERE NOT EXISTS( 
+			SELECT q.question
+			FROM eb_question AS q
+			<where>
+				<if test="q.contextId != null and q.contextId > 0">
+					AND q.context_id = #{q.contextId}
+				</if>
+				<if test="q.questionCode != null and q.questionCode > 0">
+					AND q.question_code = #{q.questionCode}
+				</if>
+				<if test="q.question != null and q.question != ''">
+					AND q.question = #{q.question}
+				</if>
+			</where>
+		) -->
+	</insert>
+	
+	<select id="listAsks" resultType="AskPO">
+		SELECT 
+			<include refid="askSql"/>
+		FROM eb_ask AS a
+		<where>
+			<if test="a.askCode != null and a.askCode > 0">
+				AND a.ask_code = #{a.askCode}
+			</if>
+			<if test="a.questionCode != null and a.questionCode > 0">
+				AND a.question_code = #{a.questionCode}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="addAsks" useGeneratedKeys="true">
+		INSERT INTO eb_ask (
+			id,
+			ask_code, 
+			ask, 
+			content,
+			answer,
+			instruction,
+			question_id,
+			create_time,
+			update_time
+		) VALUES
+  		<foreach item="a" collection="q.asks" separator=",">
+    		(
+    			<include refid="com.edudigital.cloudy.amp.textbook.service.mapper.CommonMapper.uuid"/>,
+    			#{a.askCode}, 
+    			#{a.ask}, 
+    			#{a.content},
+    			#{a.answer},
+    			#{a.instruction},
+    			#{a.questionId},
+    			#{a.createTime},
+    			#{a.updateTime}
+    		)
+  		</foreach>
+	</insert>
+	
+	<update id="addBkNum">
+		UPDATE eb_book
+		<set>
+			num = num + 1,
+			<if test="b.updateTime != null">
+				update_time = #{b.updateTime},
+			</if>
+		</set>
+		<where>
+			<if test="b.bookId != null and b.bookId > 0">
+				AND book_Id = #{b.bookId}
+			</if>
+		</where>
+	</update>
+	
+	<update id="updateBk">
+		UPDATE eb_book
+		<set>
+			update_time = now(),
+			<if test="b.book != null and b.book != ''">book = #{b.book},</if>
+			<if test="b.brief != null and b.brief != ''">brief = #{b.brief},</if>
+			<if test="b.majorId != null and b.majorId > 0">major_id = #{b.majorId},</if>
+			<if test="b.cover != null and b.cover != ''">cover = #{b.cover},</if>
+			<if test="b.typeId != null and b.typeId > 0">type_Id = #{b.typeId},</if>
+			<if test="b.price != null and b.price > 0">price = #{b.price},</if>
+			<if test="b.status != null and b.status > 0 ">status = #{b.status},</if>
+		</set>
+		<where>
+			<if test="b.bookId != null and b.bookId > 0">AND book_Id = #{b.bookId}</if>
+		</where>
+	</update>
+	
+	<select id="listTexts" resultType="TextPO">
+		SELECT
+			txt,
+			period_code AS periodCode
+		FROM
+			eb_txt AS t
+		<where>
+			<if test="contextId != null and contextId != ''">
+				AND t.context_id = #{contextId}			
+			</if>
+			<if test="periodCode != null and periodCode != ''">
+				AND t.period_code = #{periodCode}			
+			</if>
+		</where>
+	</select>
+	
+	<insert id="addText" useGeneratedKeys="true" keyProperty="t.txtCode">
+		INSERT INTO eb_txt(
+			id,
+			txt_code,
+			txt,
+			context_id,
+			context_id,
+			create_time,
+			update_time,
+			period_code,
+			period_id,
+			entry_code
+		)VALUES( 
+			<include refid="com.edudigital.cloudy.amp.textbook.service.mapper.CommonMapper.uuid"/>,
+			#{t.txtCode},
+			#{t.txt},
+			#{t.contextId},
+			#{t.contextId},
+			#{t.createTime},
+			#{t.updateTime},
+			#{t.periodCode},
+			#{t.periodId},
+			(SELECT 
+			COUNT(t.context_id)+1 AS entry_code
+			FROM 
+			eb_txt t
+			WHERE
+			t.context_id = #{t.contextId}
+			)			
+		)	
+	</insert>
+	
+	<select id="listDiscuss" resultType="DiscussPO">
+		SELECT
+			discuss,
+			period_code AS periodCode
+		FROM
+			eb_discuss AS d
+		<where>
+			<if test="contextId != null and contextId != ''">
+				AND d.context_id = #{contextId}			
+			</if>
+			<if test="periodCode != null and periodCode != ''">
+				AND d.period_code = #{periodCode}			
+			</if>
+		</where>
+	</select>	
+		
+	<insert id="addDiscuss" useGeneratedKeys="true">
+		INSERT INTO eb_discuss (
+			id,
+			discuss_code,
+			discuss,
+			context_id,
+			context_id,
+			create_time,
+			update_time,
+			period_code,
+			period_id
+		) VALUES
+  		<foreach item="d" collection="dis" separator=",">
+  			(
+  				<include refid="com.edudigital.cloudy.amp.textbook.service.mapper.CommonMapper.uuid"/>,
+				#{d.discussCode},
+				#{d.discuss},
+				#{d.contextId},
+				#{d.contextId},
+				#{d.createTime},
+				#{d.updateTime},
+				#{d.periodCode},
+				#{d.periodId}  			
+  			)
+  		</foreach>
+	</insert>
+ 	
+	<select id="listCourses" resultType="MajorPO">
+		SELECT
+			<include refid="majorSql"/>
+		FROM 
+			eb_major AS c
+		<where>
+			<if test="c.majorNum != null and c.majorNum > 0">AND c.major_num = #{c.majorNum}</if>
+		</where>
+	</select>
+	
+	<select id="listPeriod" resultType="PeriodPO">
+		SELECT 
+			<include refid="periodSql"/>
+		FROM
+			eb_period AS p
+	</select>
+	
+	
+	<select id="listData" resultType="EbkDataPO">
+		SET @book_id = #{bookId};
+		SET @txt_pageno = (
+			SELECT
+				MAX(t.entry_code) AS pageno
+			FROM
+				(
+					SELECT
+						a.book_Id,
+						a.context_id,
+						t.txt,
+						t.entry_code
+					FROM
+						eb_txt t
+					INNER JOIN (
+						SELECT
+							c.context_id,
+							c.book_Id
+						FROM
+							eb_context c
+						WHERE
+							c.book_Id = @book_id
+					) a ON a.context_id = t.context_id
+				) t
+			WHERE
+				t.context_id = (
+					SELECT
+						MIN(t.context_id)
+					FROM
+						(
+							SELECT
+								a.book_Id,
+								a.context_id,
+								t.txt,
+								t.entry_code
+							FROM
+								eb_txt t
+							INNER JOIN (
+								SELECT
+									c.context_id,
+									c.book_Id
+								FROM
+									eb_context c
+								WHERE
+									c.book_Id = @book_id
+							) a ON a.context_id = t.context_id
+						) t
+				)
+			GROUP BY
+				t.context_id
+		);
+		
+		SET@context_pageno = (
+			SELECT
+				MAX(t.entry_code) AS pageno
+			FROM
+				(
+					SELECT
+						a.book_Id,
+						a.context_id,
+						t.txt,
+						t.entry_code
+					FROM
+						eb_txt t
+					INNER JOIN (
+						SELECT
+							c.context_id,
+							c.book_Id
+						FROM
+							eb_context c
+						WHERE
+							c.book_Id = @book_id
+					) a ON a.context_id = t.context_id
+				) t
+			WHERE
+				t.context_id = (
+					SELECT
+						MIN(t.context_id)
+					FROM
+						(
+							SELECT
+								a.book_Id,
+								a.context_id,
+								t.txt,
+								t.entry_code
+							FROM
+								eb_txt t
+							INNER JOIN (
+								SELECT
+									c.context_id,
+									c.book_Id
+								FROM
+									eb_context c
+								WHERE
+									c.book_Id = @book_id
+							) a ON a.context_id = t.context_id
+						) t
+				)
+			GROUP BY
+				t.context_id
+		);
+		
+		SET@num = (SELECT num FROM eb_num);
+		SET@len = (SELECT len FROM eb_num);
+		
+		
+		
+		
+		
+		UPDATE eb_num
+		SET num = (
+			@num + (
+				SELECT
+					max(t.txt_code)
+				FROM
+					eb_txt AS t
+				LEFT JOIN eb_context AS c ON t.context_id = c.context_id
+				WHERE
+					c.book_Id = @book_id
+			)
+		),
+		 len = (
+			@len + (
+				SELECT
+					max(c.context_id)
+				FROM
+					eb_context AS c
+				WHERE
+					c.book_Id = @book_id
+			)
+		);
+
+
+		SELECT
+			c.book_Id AS bookId,
+			'3' AS 'type',
+			t.txt AS content,
+			c.context_id + @len AS parentId,
+			t.txt_code + @num  AS 'dataCode',
+		
+		IF (
+			t.context_id = (
+				SELECT
+					MIN(t.context_id)
+				FROM
+					(
+						SELECT
+							a.book_Id,
+							a.context_id,
+							t.txt,
+							t.entry_code
+						FROM
+							eb_txt t
+						INNER JOIN (
+							SELECT
+								c.context_id,
+								c.book_Id
+							FROM
+								eb_context c
+							WHERE
+								c.book_Id = @book_id
+						) a ON a.context_id = t.context_id
+					) t
+			),
+			t.entry_code,
+			@txt_pageno :=@txt_pageno + 1
+		) AS pageno
+		FROM
+			(
+				SELECT
+					a.book_Id,
+					a.context_id,
+					t.txt,
+					t.entry_code,
+					t.txt_code
+				FROM
+					eb_txt t
+				INNER JOIN (
+					SELECT
+						c.context_id,
+						c.book_Id
+					FROM
+						eb_context c
+					WHERE
+						c.book_Id = @book_id
+				) a ON a.context_id = t.context_id
+			) t
+		LEFT JOIN eb_context c ON c.context_id = t.context_id
+		
+		UNION ALL
+			SELECT
+				c.book_Id AS bookId,
+				'1' AS 'type',
+				c.context,
+				'-1' AS 'parentId',
+				t.context_id + @len AS dataCode,
+				t.pageno
+			FROM
+				(
+					SELECT
+						t.context_id AS context_id,
+						t.txt AS txt,
+		
+					IF (
+						t.context_id = (
+							SELECT
+								MIN(t.context_id)
+							FROM
+								(
+									SELECT
+										a.book_Id,
+										a.context_id,
+										t.txt,
+										t.entry_code
+									FROM
+										eb_txt t
+									INNER JOIN (
+										SELECT
+											c.context_id,
+											c.book_Id
+										FROM
+											eb_context c
+										WHERE
+											c.book_Id = @book_id
+									) a ON a.context_id = t.context_id
+								) t
+						),
+						t.entry_code,
+						@context_pageno :=@context_pageno + 1
+					) AS pageno,
+					t.context_id AS parent_id
+				FROM
+					(
+						SELECT
+							a.book_Id,
+							a.context_id,
+							t.txt,
+							t.entry_code
+						FROM
+							eb_txt t
+						INNER JOIN (
+							SELECT
+								c.context_id,
+								c.book_Id
+							FROM
+								eb_context c
+							WHERE
+								c.book_Id = @book_id
+						) a ON a.context_id = t.context_id
+					) t
+				GROUP BY
+					t.context_id
+				) t
+				LEFT JOIN eb_context c ON t.context_id = c.context_id
+		ORDER BY
+		parentId,
+		dataCode ASC
+	</select>
+	
+	<update id="upLen">
+		UPDATE eb_book b
+		SET b.length = b.length + 1
+		<where>
+			<if test="bc != null and bc >0 ">
+				b.book_Id = #{bc}
+			</if>
+		</where>
+	</update>
+	
+	
+	<delete id="deleteContext">
+		DELETE FROM
+			eb_context 
+		<where>
+	    	context_id in
+			<foreach collection="c" item="a" open="(" close=")" separator=",">
+				#{a.contextId}
+			</foreach>	
+			or parent_id in
+			<foreach collection="c" item="a" open="(" close=")" separator=",">
+				#{a.contextId}
+			</foreach>	
+		</where>
+	</delete>
+	
+	
+		<select id="countBooksByAuthor" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			eb_book AS b
+		LEFT JOIN
+			dc_user AS u ON b.author_id = u.id
+		LEFT JOIN
+			eb_major AS c ON b.major_id = c.id
+		LEFT JOIN
+			eb_type AS t ON b.type_id = t.type_id
+		<where>
+			<if test="b.bookId != null and b.bookId > 0">
+				AND b.book_Id = #{b.bookId}
+			</if>
+			<choose>
+    			<when test="u.type != null and u.type == 1">
+      				<if test="u.id != null and u.id > 0">
+						AND b.author_id = #{u.id}
+					</if>
+   				</when>
+    			<when test="u.type != null and u.type == 3">
+    			</when>
+    			<otherwise>
+     				 AND u.type != 2
+    			</otherwise>
+  			</choose>
+		</where>
+	</select>
+	
+	<select id="countChapterContexts" resultType="int" >
+		SELECT
+			COUNT(*)
+		FROM
+			eb_context AS a
+		<where>
+			<if test="c.bookId != null and c.bookId > 0">
+				AND a.book_Id = #{c.bookId}
+			</if>
+				AND a.parent_id = #{c.parentId}		
+		</where>	
+	</select>
+	
+	<select id="likeListBooks" resultType="EBKPO">
+		SELECT
+			<include refid="bksql"/>,
+			m.major AS major
+		FROM
+			eb_book AS b
+		LEFT JOIN eb_major AS m ON b.major_id = m.id
+		<where>
+			<if test="b.majorId != null and b.majorId > 0">
+				AND	b.major_id = #{b.majorId}
+			</if>
+			<if test="b.bookName != null and b.bookName != ''">
+				AND	b.book like '%${b.bookName}%' 
+			</if>
+		</where>
+			 	
+	</select>	
+	
+	<resultMap type="MajorPO" id="lmMape">
+		<result column="maId" property="id"/>
+		<result column="category" property="major"/>		
+		<collection property="collegePOs" ofType="MajorPO">		
+			<result column="majId" property="id"/>
+			<result column="college" property="major"/>
+			<result column="majorNum" property="majorNum"/>
+				<collection property="majorPOs" ofType="MajorPO">
+					<result column="id" property="id"/>
+					<result column="major" property="major"/>
+					<result column="majorNum" property="majorNum"/>
+				</collection>
+		</collection>
+	</resultMap>
+	<select id="listMajors" resultMap="lmMape">
+		SELECT
+			<if test="_parameter == 1">
+				m.id AS maId,								
+				m.major AS category,
+				ma.id AS majId,
+				ma.major AS college,
+				maj.id AS id,
+				maj.major AS major,
+				maj.major_num AS majorNum
+			</if>
+			<if test="_parameter == 2">			
+				ma.major AS category,
+				ma.id AS maId,
+				maj.id AS majId,
+				maj.major AS college,				
+				maj.major_num AS majorNum
+			</if>
+		FROM
+			eb_major AS m
+		LEFT JOIN eb_major AS ma ON m.major_num = ma.parent_num
+		LEFT JOIN eb_major AS maj ON ma.major_num = maj.parent_num
+		WHERE
+			m.type = 1
+	</select>
+	
+	<!-- <resultMap type="MajorPO" id="lmMape">
+		<result column="category" property="major"/>	
+		<collection property="majorPOs">		
+			<result column="college" property="major"/>	
+			<collection property="majorPOs" ofType="MajorPO">
+				<result column="major" property="major"/>
+			</collection>
+		</collection>
+	</resultMap>
+	<select id="listMajors" resultMap="lmMape">
+		SELECT
+			m.major AS category,
+			ma.major AS college,
+			maj.major AS major
+		FROM
+			eb_major AS m
+		LEFT JOIN eb_major AS ma ON m.major_code = ma.parent_code
+		LEFT JOIN eb_major AS maj ON ma.major_code = maj.parent_code
+		WHERE
+			m.type = 1
+	</select> -->
+	<resultMap type="QuestionAO" id="QaMap">
+		<id column="id" property="id"/>
+		<result column="question" property="question"/>
+		<result column="chapterId" property="chapterId"/>
+		<result column="score" property="score"/>
+		<result column="type" property="type"/>		
+		<result column="analysis" property="analysis"/>	
+		<collection property="listAskAO" resultMap="QaaskMap"></collection>
+	</resultMap>
+	<resultMap type="AskAO" id="QaaskMap">
+		<result column="option" property="option"/>
+		<result column="answer" property="answer"/>	
+	</resultMap>
+	
+	<select id="listEbkDataQuestion" resultMap="QaMap">			
+		SELECT
+			q.question_id AS id,
+			q.question AS question,
+			q.context_id AS chapterId,
+			q.resolution AS analysis,
+			q.score AS score,
+			q.type AS type,
+			a.content AS `option`,
+			a.answer AS answer			
+		FROM
+			eb_question AS q
+		LEFT JOIN eb_context AS c ON q.context_id = c.context_id
+		LEFT JOIN eb_ask AS a ON a.question_id = q.question_id	
+		<where>
+			q.context_id IN 
+				(
+					SELECT
+						c.context_id
+					FROM
+						eb_context AS c
+					WHERE
+						c.book_id IN (
+							SELECT
+								b.book_id
+							FROM
+								eb_book AS b
+							WHERE
+								b.tb_parent_id = #{b.bookId}
+								AND #{b.typeId} IN (3,4)
+						)
+				)
+			OR q.context_id IN (
+				SELECT
+						c.context_id
+					FROM
+						eb_context AS c
+					WHERE
+						c.book_id = #{b.bookId}
+					AND #{b.typeId} IN (1,2,5,6,7)		
+			)
+<!-- 			<if test="q.contextId != null AND q.contextId != ''">			
+			OR q.context_id = #{q.contextId}
+			</if>	 -->	
+		</where>
+	</select>
+	
+	<select id="listTypes" resultType="TypePO">
+		SELECT <include refid="typeSql"/>
+		FROM 
+			eb_type AS t
+	</select>
+</mapper> 

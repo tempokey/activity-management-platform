@@ -1,0 +1,65 @@
+spring:
+  application:
+    name: msg-service
+  datasource:
+    url: jdbc:mysql://192.168.1.236:3306/amp?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: 1qaz@WSX
+    driver-class-name: com.mysql.jdbc.Driver
+  data:
+    mongodb:
+      uri: mongodb://192.168.1.236:27017/msg
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+  rabbitmq:
+    host: 192.168.1.236
+    port: 5672
+    username: aiding
+    password: aiding
+    publisher-confirms: true
+    virtual-host: /
+  redis:
+    host: 192.168.1.236
+    port: 6379
+    password: null
+    timeout: 0
+    pool:
+      max-active: 8
+      max-wait: 0
+      max-idle: 8
+      min-idle: 0
+mybatis:
+  mapper-locations: classpath*:mappers/*Mapper.xml
+  config: classpath:config/mybatis-config.xml
+  type-aliases-package: com.edudigital.cloudy.amp.msg.service.entity.po
+server:
+  port: 8762
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://registration-center:8751/registration-center/eureka/,http://registration-center-bk:8752/registration-center/eureka/
+    healthcheck:
+      enabled: false
+  instance:
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+    statusPageUrlPath: /msg-service/msg/info
+    healthCheckUrlPath: /msg-service/health
+amp:
+  msg:
+    ali:
+      product: Dysmsapi
+      domain: dysmsapi.aliyuncs.com
+      region: cn-hangzhou
+      accesskeyid: LTAI6xttSEFt5sOs
+      accesskeysecret: UdGhK8Bwc4iXniRYZnBLpoyvb3rShF
+      signname: 爱丁集团
+logging:
+  level:
+    org:
+      springframework:
+        amqp: ERROR
+    com:
+      patterncat: INFO

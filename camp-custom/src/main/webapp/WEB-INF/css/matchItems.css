@@ -1,0 +1,18 @@
+@charset "UTF-8";
+
+.jumbotron {
+	text-align: center;
+}
+
+.inner {
+	padding: 30px;
+}
+
+.cover {
+	padding: 0 20px;
+}
+
+.cover .btn-lg {
+	padding: 10px 20px;
+	font-weight: bold;
+}

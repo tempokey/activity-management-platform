@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: config-service
+  cloud:
+    config:
+      label: master
+      server:
+        git:
+          uri: https://github.com/tempokey/pioneer/
+          username:  
+          password: 
+server:
+  port: 8204
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://registration-center:8101/registration-center/eureka/,http://registration-center-bk:8101/registration-center/eureka/
+    healthcheck:
+      enabled: false
+  instance:
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+    statusPageUrlPath: /config-service/info
+    healthCheckUrlPath: /config-service/health

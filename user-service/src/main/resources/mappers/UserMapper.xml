@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edudigital.cloudy.amp.user.service.mapper.UserMapper">
+
+	<resultMap type="permissionPO" id="permissionMap">
+		<id column="permissionId" property="permissionId" />
+		<result column="permission" property="permission" />
+	</resultMap>
+
+	<resultMap type="rolePO" id="roleMap">
+		<id column="roleCode" property="roleCode" />
+		<result column="role" property="role" />
+		<collection property="permissions" resultMap="permissionMap" />
+	</resultMap>
+
+	<resultMap type="userPO" id="userMap">
+		<id column="id" property="Id" />
+		<result column="name" property="name"/>
+		<result column="uuid" property="uuId"/>
+		<result column="account" property="account" />
+		<result column="password" property="password" />
+		<collection property="roles" resultMap="roleMap" />
+	</resultMap>
+
+	<sql id="userCols">
+		u.id AS "Id",
+		u.uuid AS "uuId",
+		u.school_id AS "schoolId",
+		u.ad_code AS "adCode",
+		u.account AS "account",
+		u.phone AS "phone",
+		u.password AS "password",
+		u.press_id AS "pressId",
+		u.course_id AS "courseId",
+		u.`type` AS "type",
+		u.name AS "name",
+		u.token_key AS "tokenKey",
+		u.remote_ip AS "remoteIp"
+	</sql>
+
+	<sql id="roleCols">
+		r.role_id AS "roleId",
+		r.role AS "role"
+	</sql>
+
+	<sql id="permissionCols">
+		p.permission_id AS "permissionId",
+		p.permission AS "permission"
+	</sql>
+
+	<select id="getUser" resultType="userPO">
+		SELECT
+			<include refid="userCols" />
+		FROM dc_user AS u
+		<where>
+			<if test="u.adCode != null and u.adCode != ''">
+				AND u.ad_code = #{u.adCode}
+			</if>
+			<if test="u.account != null and u.account != ''">
+				AND u.account = #{u.account}
+			</if>
+			<if test="u.password != null and u.password != ''">
+				AND u.password = #{u.password}
+			</if>
+			<if test="u.phone != null and u.phone != ''">
+				AND u.phone = #{u.phone}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="addUser" useGeneratedKeys="true" keyProperty="Id">
+		<selectKey keyProperty="Id" resultType="int" order="BEFORE">
+			SELECT
+			max(id) + 1 as Id FROM dc_user
+		</selectKey>
+		INSERT INTO dc_user(
+			id,
+			uuid,
+			school_id,
+			ad_code,
+			name,
+			phone,
+			account,
+			salt,
+			password,
+			press_id,
+			course_id,
+			type
+		)SELECT
+			#{Id},
+			#{u.uuId},
+			#{u.schoolId},
+			#{u.adCode},
+			#{u.name},
+			#{u.phone},
+			#{u.account},
+			#{u.salt},
+			#{u.password},
+			#{u.pressId},
+			#{u.courseId},
+			#{u.type}
+		FROM DUAL
+		WHERE NOT EXISTS( 
+			SELECT id
+			FROM dc_user
+			<where>
+		 		<if test="u.account != null and u.account != ''">
+					OR account = #{u.account}
+				</if>
+				<if test="u.adCode != null and u.adCode != ''">
+					OR ad_code = #{u.adCode}
+				</if> 
+			</where>
+		)
+		<!-- VALUES(
+			#{id},
+			#{userId},
+			#{adCode},
+			#{account},
+			#{password},
+			#{pressId},
+			#{pressCode},
+			#{courseId},
+			#{courseCode},
+			#{name}
+		)  -->
+	</insert>
+
+	<select id="listUserPermission" resultMap="userMap">
+		SELECT
+		<include refid="userCols" />
+		,
+		<include refid="roleCols" />
+		,
+		<include refid="permissionCols" />
+		FROM 
+			dc_user AS u
+		LEFT JOIN 
+			dc_user_role_rel AS urr ON u.id = urr.user_id
+		LEFT JOIN 
+			dc_role AS r ON urr.role_id = r.role_id
+		LEFT JOIN 
+			dc_role_permission_rel AS rpr ON r.role_id = rpr.role_id
+		LEFT JOIN 
+			dc_permission AS p ON rpr.permission_id = p.permission_id
+		<where>
+			<if test="u.adCode != null and u.adCode != ''">
+				AND u.ad_code = #{u.adCode}
+			</if>
+			<if test="u.account != null and u.account != ''">
+				AND u.account = #{u.account}
+			</if>
+		</where>
+	</select>
+
+	<update id="updateUser">
+		UPDATE dc_user
+		<set>
+			<if test="u.name != null and u.name != ''">name = #{u.name},</if>
+			<if test="u.password != null and u.password != ''">password = #{u.password},</if>
+			<if test="u.tokenKey != null and u.tokenKey != ''">token_key = #{u.tokenKey},</if>
+			<if test="u.remoteIp != null and u.remoteIp != ''">remote_ip = #{u.remoteIp},</if>
+			<if test="u.adCode != null and u.adCode != ''">ad_code = #{u.adCode}</if>
+		</set>
+		<where>
+			<if test="u.account != null and u.account != ''">account = #{u.account}</if>
+		</where>
+	</update>
+</mapper> 

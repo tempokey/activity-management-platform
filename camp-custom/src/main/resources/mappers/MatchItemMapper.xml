@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.edudigital.cloudy.amp.camp.custom.mapper.MatchItemMapper">
+
+	<sql id="matchsql">
+		m.id AS "id",
+		m.name AS "name",
+		m.status AS "status",
+		m.item_order AS "itemOrder",
+		m.flag AS "flag"
+	</sql>
+
+	<select id="listMatchItems" resultType="MatchItemPO">
+		SELECT
+		<include refid="matchsql" />
+		FROM ec_skill_match_items AS m
+	</select>
+
+</mapper>

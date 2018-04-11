@@ -1,0 +1,16 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://registration-center:8751/registration-center/eureka/,http://registration-center-bk:8752/registration-center/eureka/
+    healthcheck:
+      enabled: false
+  instance:
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+    statusPageUrlPath: /news-custom/info
+    healthCheckUrlPath: /news-custom/health
+server:
+  port: 8771
+spring:
+  application:
+    name: news-custom

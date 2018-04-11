@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edudigital.cloudy.amp.textbook.service.mapper.UserMapper">
+
+	<resultMap type="PermissionPO" id="PermissionMap">
+		<id column="permissionCode" property="permissionCode" />
+		<result column="permission" property="permission" />
+	</resultMap>
+
+	<resultMap type="RolePO" id="RoleMap">
+		<id column="roleCode" property="roleCode" />
+		<result column="role" property="role" />
+		<collection property="permissions" resultMap="PermissionMap" />
+	</resultMap>
+
+	<resultMap type="UserPO" id="UserMap">
+		<id column="userCode" property="userCode" />
+		<result column="account" property="account" />
+		<result column="password" property="password" />
+		<collection property="roles" resultMap="RoleMap" />
+	</resultMap>
+
+	<sql id="userCols">
+		u.id AS "id",
+		u.user_id AS "userId",
+		u.account AS "account",
+		u.password AS "password",
+		u.press_id AS "pressId",
+		u.course_id AS "courseId",
+		u.name AS "name"
+	</sql>
+
+	<sql id="roleCols">
+		r.role_id AS "roleId",
+		r.role AS "role"
+	</sql>
+
+	<sql id="permissionCols">
+		p.permission_id AS "permissionId",
+		p.permission AS "permission"
+	</sql>
+
+	<select id="getUser" resultType="UserPO">
+		SELECT
+		<include refid="userCols" />
+		FROM dc_user AS u
+		<where>
+			<if test="user.id != null and user.id != ''">
+				AND u.id = #{user.id}
+			</if>
+			<if test="user.account != null and user.account != ''">
+				AND u.account = #{user.account}
+			</if>
+		</where>
+	</select>
+
+	<select id="getUserByAccount" resultMap="UserMap">
+		SELECT
+		<include refid="userCols" />
+		,
+		<include refid="roleCols" />
+		,
+		<include refid="permissionCols" />
+		FROM 
+			dc_user AS u
+		LEFT JOIN 
+			dc_user_role_rel AS urr 
+			ON u.user_id = urr.user_id
+		LEFT JOIN 
+			dc_role AS r ON urr.role_id = r.role_id
+		LEFT JOIN dc_role_permission_rel AS rpr ON r.role_id =
+		rpr.role_code
+		LEFT JOIN dc_permission AS p ON rpr.permission_id =
+		p.permission_id
+		<where>
+			<if test="user.account != null and user.account != ''">
+				AND u.account = #{user.account}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="add" useGeneratedKeys="true" keyProperty="userCode">
+		<selectKey keyProperty="userCode" resultType="int" order="BEFORE">
+			SELECT
+			max(user_id) + 1 as userId FROM dc_user
+		</selectKey>
+		INSERT INTO dc_user(
+			id,
+			user_Id,
+			school_id,
+			ad_code,
+			name,
+			account,
+			salt,
+			password,
+			press_id,
+			course_id,
+			type
+		)SELECT 
+			#{u.id},
+			#{u.userId},
+			#{u.schoolId},
+			#{u.adCode},
+			#{u.name},
+			#{u.account},
+			#{u.salt},
+			#{u.password},
+			#{u.pressId},
+			#{u.courseId},
+			#{u.type}
+		FROM DUAL
+		WHERE NOT EXISTS( 
+			SELECT user_code
+			FROM dc_user
+			<where>
+				<if test="u.account != null and u.account != ''">
+					OR account = #{u.account}
+				</if>
+				<if test="u.adCode != null and u.adCode != ''">
+					OR ad_code = #{u.adCode}
+				</if>
+			</where>
+		)
+		<!-- VALUES(
+			#{id},
+			#{userCode},
+			#{adCode},
+			#{account},
+			#{password},
+			#{pressId},
+			#{pressCode},
+			#{courseId},
+			#{courseCode},
+			#{name}
+		)  -->
+	</insert>
+
+</mapper> 

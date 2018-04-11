@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edudigital.cloudy.amp.textbook.service.mapper.StatisticMapper">
+
+	<resultMap type="DataPointPO" id="dpMap">
+		<result column="book" property="label" />
+		<result column="num" property="y" />
+		<result column="toolTipContent" property="toolTipContent" />
+	</resultMap>
+
+	<!--条形图专用的MAP -->
+	<resultMap type="DataSeriesAO" id="StaMap">
+		<result column="bk" property="name" />
+		<result column="type" property="type" />
+		<result column="showInLegend" property="showInLegend" />
+		<collection property="dataPoints" resultMap="staID" />
+	</resultMap>
+	<!--数据库返回的图书数据MAP -->
+	<resultMap type="StaEbkPO" id="staID">
+		<result column="y" property="y" />
+		<result column="label" property="label" />
+	</resultMap>
+	<!-- 条形图统计数据SQL -->
+	<select id="getSta" parameterType="TimeAO" resultMap="StaMap">
+		SELECT l.bk,l.dl AS
+		label,COUNT(o.`status`) AS y, 'spline' AS
+		type,'true' AS
+		showInLegend
+		FROM(
+		SELECT book bk,date_list dl,book_code
+		bd FROM eb_book,calendar
+		<where>
+			date_list BETWEEN
+			<if test="timeBegin != null and timeBegin != ''">
+				#{timeBegin} AND
+			</if>
+			<if test="timeEnd != null and timeEnd != ''">
+				#{timeEnd}
+			</if>
+		</where>
+		ORDER BY date_list ASC
+		) l LEFT JOIN dc_order o ON
+		o.product_code=l.bd
+		AND l.dl=date_format(o.commit_time, '%Y-%m-%d')
+		GROUP BY l.bk,l.dl
+	</select>
+
+	<select id="listEbkColumnChart" parameterType="EbkPO" resultMap="dpMap">
+		SELECT
+		b.book AS book,
+		b.num AS num,
+		CONCAT('书名:',b.BOOK,'&lt;br&gt;销售数量:',b.NUM,'&lt;br&gt;是否已上架：',if(b.status=1,'是','否'))
+		AS toolTipContent
+		FROM
+		eb_book AS b
+		<where>
+			<if test="book != null and book != ''">
+				AND b.book LIKE '%${book}%'
+			</if>
+			<choose>
+				<when test="status == 1">
+					AND status = 1
+				</when>
+				<when test="status == 2">
+					AND status = 2
+				</when>
+			</choose>
+		</where>
+	</select>
+
+
+	<resultMap type="OrderPo" id="epMap">
+		<result column="mark" property="mark" />
+		<result column="commitTime" property="commitTime" />
+		<result column="method" property="method" />
+	</resultMap>
+
+	<select id="listEbkSales" parameterType="OrderPo" resultMap="epMap">
+		SELECT
+		d.mark AS mark,
+		d.commit_time AS commitTime,
+		d.method AS method
+		FROM dc_order d
+		<where>
+			d.status = 3
+		</where>
+	</select>
+</mapper>
+
+
+
+
+
+

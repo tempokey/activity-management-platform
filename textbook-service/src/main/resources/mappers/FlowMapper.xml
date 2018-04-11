@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edudigital.cloudy.amp.textbook.service.mapper.FlowMapper">
+
+	<sql id="flowsql">
+		f.channel AS "channel",
+		f.project_id AS "projectId",
+		f.project AS project,
+		f.mch_id AS "mchId",
+		f.appid AS "appid",
+		f.device_info AS "deviceInfo",
+		f.nonce_str AS "nonceStr",
+		f.sign AS "sign",
+		f.sign_type AS "signType",
+		f.body AS "body",
+		f.detail AS "detail",
+		f.attach AS "attach",
+		f.trade_no AS "tradeNo",
+		f.out_trade_no AS "outTradeNo",
+		f.transaction_id AS "transactionId",
+		f.total_fee AS "totalFee",
+		f.spbill_create_ip AS "spbillCreateIp",
+		f.time_start AS "timeStart",
+		f.time_expire AS "timeExpire",
+		f.notify_id AS "notifyId",
+		f.notify_url AS "notifyUrl",
+		f.trade_type AS "tradeType",
+		f.product_id AS "productId",
+		f.product_code AS "productCode",
+		f.type AS "type",
+		f.status AS "status",
+		f.result AS "result",
+		f.return_id AS "returnId",
+		f.return_msg AS "returnMsg",
+		f.create_by AS "createBy",
+		f.create_date AS "createDate",
+		f.update_by AS "updateBy",
+		f.update_date AS "updateDate",
+		f.remarks AS "remarks",
+		f.del_flag AS "delFlag"
+	</sql>
+
+	<insert id="add" useGeneratedKeys="true" keyProperty="flowId">
+		<selectKey keyProperty="flowId" resultType="int" order="BEFORE">
+			SELECT
+			max(flow_id) + 1 as flowId FROM dc_flow
+		</selectKey>
+		INSERT INTO dc_flow(
+		flow_id,
+		channel,
+		project_id,
+		project,
+		mch_id,
+		appid,
+		device_info,
+		nonce_str,
+		sign,
+		sign_type,
+		body,
+		detail,
+		attach,
+		trade_no,
+		out_trade_no,
+		transaction_id,
+		total_fee,
+		spbill_create_ip,
+		time_start,
+		time_expire,
+		notify_id,
+		notify_url,
+		trade_type,
+		product_id,
+		product_code,
+		type,
+		status,
+		result,
+		return_id,
+		return_msg,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag
+		) VALUES (
+		#{f.flowId},
+		#{f.channel},
+		#{f.projectId},
+		#{f.project},
+		#{f.mchId},
+		#{f.appid},
+		#{f.deviceInfo},
+		#{f.nonceStr},
+		#{f.sign},
+		#{f.signType},
+		#{f.body},
+		#{f.detail},
+		#{f.attach},
+		#{f.tradeNo},
+		#{f.outTradeNo},
+		#{f.transactionId},
+		#{f.totalFee},
+		#{f.spbillCreateIp},
+		#{f.timeStart},
+		#{f.timeExpire},
+		#{f.notifyId},
+		#{f.notifyUrl},
+		#{f.tradeType},
+		#{f.productId},
+		#{f.productCode},
+		#{f.type},
+		#{f.status},
+		#{f.result},
+		#{f.returnId},
+		#{f.returnMsg},
+		#{f.createBy},
+		#{f.createDate},
+		#{f.updateBy},
+		#{f.updateDate},
+		#{f.remarks},
+		#{f.delFlag}
+		)
+	</insert>
+	
+	<select id="listFlows" resultType="FlowPO">
+		SELECT
+			<include refid="flowsql" />
+		FROM 
+			dc_flow f
+		<where>
+			<if test="f.outTradeNo != null and f.outTradeNo != ''">
+				AND f.out_trade_no = #{f.outTradeNo}
+			</if>
+		</where>
+	</select>
+	
+	<update id="update">
+		UPDATE dc_flow SET
+		<if test="f.channel != null and f.channel != ''">
+			channel = #{f.channel},
+		</if>
+		<if test="f.projectId != null and f.projectId != ''">
+			project_id = #{f.projectId},
+		</if>
+		<if test="f.project != null and f.project != ''">
+			project = #{f.project},
+		</if>
+		<if test="f.mchId != null and f.mchId != ''">
+			mch_id = #{f.mchId},
+		</if>
+		<if test="f.appid != null and f.appid != ''">
+			appid = #{f.appid},
+		</if>
+		<if test="f.deviceInfo != null and f.deviceInfo != ''">
+			device_info = #{f.deviceInfo},
+		</if>
+		<if test="f.nonceStr != null and f.nonceStr != ''">
+			nonce_str = #{f.nonceStr},
+		</if>
+		<if test="f.sign != null and f.sign != ''">
+			sign = #{f.sign},
+		</if>
+		<if test="f.signType != null and f.signType != ''">
+			sign_type = #{f.signType},
+		</if>
+		<if test="f.body != null and f.body != ''">
+			body = #{f.body},
+		</if>
+		<if test="f.detail != null and f.detail != ''">
+			detail = #{f.detail},
+		</if>
+		<if test="f.attach != null and f.attach != ''">
+			attach = #{f.attach},
+		</if>
+		<if test="f.tradeNo != null and f.tradeNo != ''">
+			trade_no = #{f.tradeNo},
+		</if>
+		<if test="f.outTradeNo != null and f.outTradeNo != ''">
+			out_trade_no = #{f.outTradeNo},
+		</if>
+		<if test="f.transactionId != null and f.transactionId != ''">
+			transaction_id = #{f.transactionId},
+		</if>
+		<if test="f.totalFee != null">
+			total_fee = #{f.totalFee},
+		</if>
+		<if test="f.spbillCreateIp != null and f.spbillCreateIp != ''">
+			spbill_create_ip = #{f.spbillCreateIp},
+		</if>
+		<if test="f.timeStart != null">
+			time_start = #{f.timeStart},
+		</if>
+		<if test="f.notifyId != null and f.notifyId != ''">
+			notify_id = #{f.notifyId},
+		</if>
+		<if test="f.notifyUrl != null and f.notifyUrl != ''">
+			notify_url = #{f.notifyUrl},
+		</if>
+		<if test="f.tradeType != null and f.tradeType != ''">
+			trade_type = #{f.tradeType},
+		</if>
+		<if test="f.productId != null and f.productId != ''">
+			product_id = #{f.productId},
+		</if>
+		<if test="f.productCode != null and f.productCode != ''">
+			product_code = #{f.productCode},
+		</if>
+		<if test="f.type != null and f.type != ''">
+			type = #{f.type},
+		</if>
+		<if test="f.status != null and f.status > 0">
+			status = #{f.status},
+		</if>
+		<if test="f.result != null and f.result > 0">
+			result = #{f.result},
+		</if>
+		<if test="f.returnCode != null and f.returnCode != ''">
+			return_id = #{f.returnId},
+		</if>
+		<if test="f.returnMsg != null and f.returnMsg != ''">
+			return_msg = #{f.returnMsg},
+		</if>
+		<if test="f.remarks != null and f.remarks != ''">
+			remarks = #{f.remarks},
+		</if>
+			time_expire = #{f.timeExpire}
+		<where>
+			<if test="f.flowCode != null and f.flowCode != ''">
+				AND flow_id = #{f.flowId}
+			</if>
+			<if test="f.outTradeNo != null and f.outTradeNo != ''">
+				AND out_trade_no = #{f.outTradeNo}
+			</if>
+		</where>
+	</update>
+</mapper>

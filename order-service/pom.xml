@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.edudigital.cloudy</groupId>
+		<artifactId>activity-management-platform</artifactId>
+		<version>0.0.1</version>
+	</parent>
+
+	<artifactId>order-service</artifactId>
+	<packaging>war</packaging>
+
+	<name>order-service</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<start-class>com.edudigital.cloudy.amp.order.service.OrderServiceApplication</start-class>
+	</properties>
+
+	<dependencies>
+		<!-- 基础依赖 -->
+		<dependency>
+			<groupId>com.edudigital.cloudy</groupId>
+			<artifactId>order-base</artifactId>
+			<version>${amp.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.edudigital.cloudy</groupId>
+			<artifactId>textbook-base</artifactId>
+			<version>${amp.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.edudigital.cloudy</groupId>
+			<artifactId>util-base</artifactId>
+			<version>${amp.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.edudigital.cloudy</groupId>
+			<artifactId>msg-base</artifactId>
+			<version>${amp.version}</version>
+		</dependency>
+
+		<!-- pay start -->
+		<dependency>
+			<groupId>com.edudigital.cloudy</groupId>
+			<artifactId>pay-core</artifactId>
+		</dependency>
+		<!-- pay end -->
+
+		<!-- SpringBoot -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<!-- mybatis start -->
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<!-- mybatis end -->
+		<!-- rabbitMq start -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+		<!-- rabbitMq end -->
+
+		<!-- spring cloud start -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
+		</dependency>
+		<!-- spring cloud end -->
+
+		<!-- Swagger start -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+		</dependency>
+		<!-- swagger end -->
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-ribbon</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-hystrix</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<finalName>order-service</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.slf4j</groupId>
+							<artifactId>slf4j-log4j13</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<packagingExcludes>WEB-INF/lib/slf4j-log4j13-1.0.1.jar</packagingExcludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

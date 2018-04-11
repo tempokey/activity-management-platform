@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edudigital.cloudy.amp.msg.service.mapper.MsgMapper">
+
+	<resultMap type="msgTemplatePO" id="msgTemplateMap">
+		<id column="id" property="id" />
+		<result column="bizCode" property="bizCode" />
+		<result column="templateCode" property="templateCode" />
+	</resultMap>
+
+	<resultMap type="RabbitMqMsgPO" id="RabbitMqMsgMap">
+		<id column="id" property="id" />
+		<result column="configName" property="configName" />
+		<result column="configValue" property="configValue" />
+	</resultMap>
+
+	<sql id="msgTemplateCols">
+		m.id AS id,
+		m.channel AS channel,
+		m.biz_code AS bizCode,
+		m.template_code AS templateCode,
+		m.sign_name AS signName
+	</sql>
+
+	<sql id="rabbitMqMsgCols">
+		r.id AS id,
+		r.config_name AS configName,
+		r.config_value AS
+		configValue
+	</sql>
+
+	<select id="getMsgTemplate" resultType="msgTemplatePO">
+		SELECT
+		<include refid="msgTemplateCols" />
+		FROM dc_msg_template AS m
+		<where>
+			<if test="m.id != null and m.id > 0">
+				AND m.id = #{m.id}
+			</if>
+			<if test="m.channel != null and m.channel != ''">
+				AND m.channel = #{m.channel}
+			</if>
+			<if test="m.bizCode != null and m.bizCode != ''">
+				AND m.biz_code = #{m.bizCode}
+			</if>
+			<if test="m.templateCode != null and m.templateCode != ''">
+				AND m.template_code = #{m.templateCode}
+			</if>
+			AND m.del_flag = 1
+		</where>
+	</select>
+
+	<select id="getRabbitMqConfig" resultMap="RabbitMqMsgMap">
+		SELECT
+		<include refid="rabbitMqMsgCols"></include>
+		FROM mq_config
+	</select>
+
+</mapper> 

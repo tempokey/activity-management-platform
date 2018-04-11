@@ -1,0 +1,35 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.1.236:8101/registration-center/eureka/,http://192.168.1.236:8102/registration-center/eureka/
+    healthcheck:
+      enabled: false
+  instance:
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+    statusPageUrlPath: /textbook-custom/swagger-ui.html
+    healthCheckUrlPath: /textbook-custom/health
+server:
+  port: 8401
+spring:
+  application:
+    name: textbook-custom
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 1
+feign:
+  client:
+    config:
+      feignName:
+        connectTimeout: 15000
+        readTimeout: 15000
+        loggerLevel: full
+wjx:
+  request:
+    url: https://ks.wjx.top/jq/21736263.aspx?sojumpparm=

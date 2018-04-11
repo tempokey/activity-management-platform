@@ -1,0 +1,34 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.1.236:8101/registration-center/eureka/,http://192.168.1.236:8102/registration-center/eureka/
+    healthcheck:
+      enabled: false
+  instance:
+    preferIpAddress: true
+    ip-address: 192.168.1.236
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+    statusPageUrlPath: /camp-custom/swagger-ui.html
+    healthCheckUrlPath: /camp-custom/health
+server:
+  port: 8402
+spring:
+  application:
+    name: camp-custom
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 1
+feign:
+  client:
+    config:
+      feignName:
+        connectTimeout: 15000
+        readTimeout: 15000
+        loggerLevel: full

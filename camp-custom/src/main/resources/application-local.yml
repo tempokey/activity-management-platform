@@ -1,0 +1,45 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://registration-center:8751/registration-center/eureka/,http://registration-center-bk:8752/registration-center/eureka/
+    healthcheck:
+      enabled: false
+  instance:
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+    statusPageUrlPath: /camp-custom/swagger-ui.html
+    healthCheckUrlPath: /camp-custom/health
+server:
+  port: 8080
+spring:
+  application:
+    name: camp-custom
+  datasource:
+    url: jdbc:mysql://192.168.1.236:3306/exam_center_dc?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: 1qaz@WSX
+    driver-class-name: com.mysql.jdbc.Driver
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+mybatis:
+  mapper-locations: classpath*:mappers/*Mapper.xml
+  config: classpath:config/mybatis-config.xml
+  type-aliases-package: com.edudigital.cloudy.amp.camp.custom.entity.po
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 1
+feign:
+  client:
+    config:
+      feignName:
+        connectTimeout: 15000
+        readTimeout: 15000
+        loggerLevel: full
+
+file: 
+   upload: 
+     uploadFilePath: F:/fileUploads/

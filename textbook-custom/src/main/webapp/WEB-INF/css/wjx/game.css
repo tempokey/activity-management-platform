@@ -1,0 +1,61 @@
+img{
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	z-index: -1
+	}
+	#matchRule{
+	position:absolute;
+	font-size: 20px;
+	margin-top: 10px;
+	right: 30px;
+	}
+	#matchRank{
+	color: white;
+	font-size: 35px;
+	margin-top: 442px;
+	margin-left: 102px;
+	line-height: 100%;
+	}
+	.rank{
+	width: 145px;
+	display:inline-block;
+	text-align: center;
+	}
+	.bestRank{
+	width: 145px;
+	display:inline-block;
+	margin-left: 75px;
+	text-align: center;
+	}
+	#specificRank{
+	line-height: 100%;
+	margin-top: 48px;
+	}
+	#beginTime{
+	font-size: 22px;
+	margin-top: 190px;
+	margin-left: 92px;
+	line-height: 100%;
+	}
+	#startTime{
+	margin-left: 97px;
+	line-height: 100%;
+	}
+	#time{
+	font-size: 36px;
+	margin-left: 20px;
+	line-height: 100%;
+	}
+	#beginMatch{	
+	margin-top: 70px;
+	}
+	#beginMatch button{
+	margin-left: 116px;
+	width: 330px;
+	height: 60px;
+	font-size: 26px;
+	border-radius: 30px;
+	color:white !important;
+	background-color: #4674FE;
+	}

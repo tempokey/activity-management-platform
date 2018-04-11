@@ -1,0 +1,17 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: registration-center
+eureka:
+  instance:
+    hostname: registration-center
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://registration-center-bk:8752/registration-center/eureka/
+    healthcheck:
+      enabled: true
+  server:
+    enableSelfPreservation: false

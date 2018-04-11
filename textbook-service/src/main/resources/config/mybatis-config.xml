@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<!-- 全局参数 -->
+	<settings>
+		<!-- 使全局的映射器启用或禁用缓存。 -->
+		<setting name="cacheEnabled" value="true" />
+
+		<!-- 全局启用或禁用延迟加载。当禁用时，所有关联对象都会即时加载。 -->
+		<setting name="lazyLoadingEnabled" value="true" />
+
+		<!-- 当启用时，有延迟加载属性的对象在被调用时将会完全加载任意属性。否则，每种属性将会按需要加载。 -->
+		<setting name="aggressiveLazyLoading" value="true" />
+
+		<!-- 是否允许单条sql 返回多个数据集 (取决于驱动的兼容性) default:true -->
+		<setting name="multipleResultSetsEnabled" value="true" />
+
+		<!-- 是否可以使用列的别名 (取决于驱动的兼容性) default:true -->
+		<setting name="useColumnLabel" value="true" />
+
+		<!-- 允许JDBC 生成主键。需要驱动器支持。如果设为了true，这个设置将强制使用被生成的主键，有一些驱动器不兼容不过仍然可以执行。 default:false -->
+		<setting name="useGeneratedKeys" value="false" />
+
+		<!-- 指定 MyBatis 如何自动映射 数据基表的列 NONE：不隐射 PARTIAL:部分 FULL:全部 -->
+		<setting name="autoMappingBehavior" value="PARTIAL" />
+
+		<!-- 这是默认的执行类型 （SIMPLE: 简单； REUSE: 执行器可能重复使用prepared statements语句；BATCH: 执行器可以重复执行语句和批量更新） -->
+		<setting name="defaultExecutorType" value="SIMPLE" />
+
+		<!-- 使用驼峰命名法转换字段。 -->
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+
+		<!-- 设置本地缓存范围 session:就会有数据的共享 statement:语句范围 (这样就不会有数据的共享 ) defalut:session -->
+		<setting name="localCacheScope" value="SESSION" />
+
+		<!-- 设置但JDBC类型为空时,某些驱动程序 要指定值,default:OTHER，插入空值时不需要指定类型 -->
+		<setting name="jdbcTypeForNull" value="NULL" />
+
+		<setting name="logImpl" value="STDOUT_LOGGING" />
+
+	</settings>
+
+	<!-- 类型别名 -->
+	<typeAliases>
+		<typeAlias alias="EbkPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.EbkPO" />
+		<typeAlias alias="FlowPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.FlowPO" />
+		<typeAlias alias="GroupPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.GroupPO" />
+		<typeAlias alias="OrderPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.OrderPO" />
+		<typeAlias alias="PermissionPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.PermissionPO" />
+		<typeAlias alias="RolePO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.RolePO" />
+		<typeAlias alias="UserPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.UserPO" />
+		<typeAlias alias="SchoolPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.SchoolPO" />
+		<typeAlias alias="UserBkPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.UserBkPO" />
+		<typeAlias alias="VersionPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.VersionPO" />
+		<typeAlias alias="EbkDataPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.EbkDataPO" />
+		<typeAlias alias="EbkDataPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.EbkDataPO" />
+		<typeAlias alias="TestPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.TestPO" />
+		<typeAlias alias="KindPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.KindPO" />
+		<typeAlias alias="ContextPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.ContextPO" />
+		<typeAlias alias="AskPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.AskPO" />
+		<typeAlias alias="QuestionPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.QuestionPO" />
+		<typeAlias alias="TextPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.TextPO" />
+		<typeAlias alias="MajorPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.MajorPO" />
+		<typeAlias alias="PeriodPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.PeriodPO" />
+		<typeAlias alias="DataPointPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.DataPointPO" /><!-- 柱状图类 -->
+		<typeAlias alias="DiscussPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.DiscussPO" /><!-- 课程讨论实体类 -->
+		<typeAlias alias="StaEbkPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.StaEbkPO" /><!-- 条形图类 -->
+
+		<typeAlias alias="ChapterAO" type="com.edudigital.cloudy.amp.textbook.base.entity.ao.ChapterAO" />
+		<typeAlias alias="SectionAO" type="com.edudigital.cloudy.amp.textbook.base.entity.ao.SectionAO" />
+
+		<typeAlias alias="TimeAO" type="com.edudigital.cloudy.amp.textbook.service.entity.ao.TimeAO" /><!-- 条形图类 -->
+		<typeAlias alias="DataSeriesAO" type="com.edudigital.cloudy.amp.textbook.service.entity.ao.DataSeriesAO" /><!-- 条形图类 -->
+
+		<typeAlias alias="ChapterContextAO" type="com.edudigital.cloudy.amp.textbook.service.entity.ao.ChapterContextAO" /><!-- 章 -->
+
+		<typeAlias alias="MajorPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.MajorPO" />
+		<typeAlias alias="EbkAO" type="com.edudigital.cloudy.amp.textbook.base.entity.ao.EbkAO" />
+		<typeAlias alias="EbkDTO" type="com.edudigital.cloudy.amp.textbook.base.entity.dto.EbkDTO" />
+		<typeAlias alias="QuestionAO" type="com.edudigital.cloudy.amp.textbook.base.entity.ao.QuestionAO" />
+		<typeAlias alias="AskAO" type="com.edudigital.cloudy.amp.textbook.base.entity.ao.AskAO" />
+		<typeAlias alias="TypePO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.TypePO" />
+
+		<typeAlias alias="gamePO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.GamePO" /><!-- 活动游戏 -->
+		<typeAlias alias="wjxScorePO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.WjxScorePO" /><!-- 问卷星 -->
+		<typeAlias alias="gameInfoPO" type="com.edudigital.cloudy.amp.textbook.service.entity.po.GameInfoPO" /><!-- 活动游戏初始化页面对象 -->
+	</typeAliases>
+
+</configuration>

@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: file-service
+  datasource:
+    url: jdbc:mysql://120.26.164.209:3306/amp?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: 1qaz@WSX
+    driver-class-name: com.mysql.jdbc.Driver
+  data: 
+    mongodb: 
+      uri: mongodb://amp:1qaz%40WSX@47.97.23.45:27017/amp
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+
+#mybatis:
+#  mapper-locations: classpath*:mappers/*Mapper.xml
+#  config: classpath:config/mybatis-config.xml
+#  type-aliases-package: com.edudigital.cloudy.amp.news.entity.po
+tb:
+  static:
+    file:
+      dir: /usr/local/uploadfiles/amp/tb/
+
+     
+server:
+  port: 8201
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://47.97.23.45:8101/registration-center/eureka/,http://47.97.23.45:8102/registration-center/eureka/
+    healthcheck:
+      enabled: false
+  instance:
+    leaseRenewalIntervalInSeconds: 1  
+    leaseExpirationDurationInSeconds: 2
+    statusPageUrlPath: /file-service/info
+    healthCheckUrlPath: /file-service/health
+    preferIpAddress: true
+    ip-address: 47.97.23.45
+#    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+ 
+      
+     
+    

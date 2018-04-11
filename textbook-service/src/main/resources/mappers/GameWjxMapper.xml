@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edudigital.cloudy.amp.textbook.service.mapper.GameWjxMapper">
+	<sql id="gameCols">
+		eg.id AS id,
+		eg.name AS name,
+		eg.type AS type,
+		eg.start_time AS startTime,
+		eg.end_time AS endTime,
+		eg.flag AS flag
+	</sql>
+
+	<sql id="userRelGameCols">
+		eurg.id AS id,
+		eurg.game_id AS gameId,
+		eurg.user_id AS userId,
+		eurg.teacher AS teacher,
+		eurg.update_time AS updateTime,
+		eurg.flag AS flag
+	</sql>
+	
+	<sql id="userRelGameSql">
+		eurg.game_id AS gameId,
+		eurg.user_id AS userId,
+		eurg.teacher AS teacher
+	</sql>
+
+	<sql id="wjxScoreCols">
+		ews.id AS id,
+		ews.urg_id AS urgId,
+		ews.rank AS rank,
+		ews.score AS score,
+		ews.update_time AS updateTime,
+		ews.flag AS flag
+	</sql>
+	
+	<select id="listGames" resultType="gamePO">
+		SELECT 
+			<include refid="gameCols"></include>,
+			eurg.teacher AS teacher
+		FROM
+			eb_game AS eg
+		LEFT JOIN 
+			eb_user_rel_game AS eurg ON eg.id = eurg.game_id 
+		<where>
+			eg.flag = 1
+			<if test="id != null and id > 0">
+				AND eg.id = #{id}
+			</if>
+			<if test="type != null and type > 0">
+				AND eg.type = #{type}
+			</if>
+		</where>
+	</select>
+
+	<select id="listWjxScore" resultType="wjxScorePO">
+		SELECT
+			<include refid="wjxScoreCols"></include>,
+			<include refid="userRelGameSql"></include>
+		FROM
+			dc_user AS du
+		LEFT JOIN eb_user_rel_game AS eurg ON du.id = eurg.user_id
+		LEFT JOIN eb_game AS eg ON eurg.game_id = eg.id
+		LEFT JOIN eb_wjx_score AS ews ON eg.id = ews.urg_id
+		<where>
+				du.type = 2
+			AND du.del_flag = 0
+			AND eg.type = 1
+			AND ews.flag = 1
+			<if test="userId != null and userId > 0">
+				AND du.id = #{userId}
+			</if>
+			<if test="gameId != null and gameId > 0">
+				AND eg.id = #{gameId}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="addUserRelGame" useGeneratedKeys="true" keyProperty="id">
+		<!-- <selectKey keyProperty="id" resultType="int" order="BEFORE">
+			SELECT
+			max(id) + 1 as id FROM eb_user_rel_game
+		</selectKey> -->
+		INSERT INTO eb_user_rel_game(
+			id,
+			game_id,
+			user_id,
+			teacher,
+			update_time,
+			flag
+		)SELECT
+			#{id},
+			#{gameId},
+			#{userId},
+			#{teacher},
+			#{updateTime},
+			#{flag}
+		FROM DUAL
+		WHERE NOT EXISTS( 
+			SELECT id
+			FROM eb_user_rel_game
+			<where>
+				flag = 1
+		 		<if test="gameId != null and gameId > 0 ">
+					AND game_id = #{gameId}
+				</if>
+				<if test="userId != null and userId > 0 ">
+					AND user_id = #{userId}
+				</if> 
+			</where>
+		)
+	</insert>
+	
+	<select id="getInitInfo" resultType="gameInfoPO">
+		SELECT
+			eg.id AS gameId,
+			eg.`name` AS gameName,
+			eg.type AS type,
+			eg.group_no AS gameGroupNo,
+			eg.url AS url,
+			eg.start_time AS gameStartTime,
+			eg.end_time AS gameEndTime,
+			eurg.teacher AS teacher,
+			ews.rank AS rank,
+			ews.score AS score,
+			(
+				SELECT
+					MIN(ews.rank) AS bestRank
+				FROM
+					eb_game AS eg
+				LEFT JOIN eb_user_rel_game AS eurg ON eg.group_no = eurg.game_group_no
+				LEFT JOIN eb_wjx_score AS ews ON eurg.id = ews.urg_id
+				WHERE
+					eg.flag IN (1, 3)
+				AND eurg.flag = 1
+				AND ews.flag IN (1, 3)
+			) AS bestRank
+		FROM
+			eb_game AS eg
+		LEFT JOIN (
+			SELECT
+				*
+			FROM
+				eb_user_rel_game
+			WHERE
+				flag = 1
+			<if test="userId != null and userId > 0">
+				AND user_id = #{userId}
+			</if>
+		) AS eurg ON eg.group_no = eurg.game_group_no
+		LEFT JOIN (
+			SELECT
+				*
+			FROM
+				eb_wjx_score
+			WHERE
+				flag = 1
+		) AS ews ON eurg.id = ews.urg_id
+		<where>
+				eg.flag = 1
+			<if test="gameGroupNo != null and gameGroupNo > 0">
+				AND eg.group_no = #{gameGroupNo}
+			</if>
+		</where>
+	</select>
+
+	<select id="listRank" resultType="gameInfoPO">
+		SELECT
+			ews.rank AS rank,
+			du.`name` AS `name`,
+			ds.`name` AS school,
+			ews.score AS score
+		FROM
+			eb_game AS eg
+		LEFT JOIN eb_user_rel_game AS eurg ON eg.id = eurg.game_id
+		LEFT JOIN dc_user AS du ON eurg.user_id = du.id
+		LEFT JOIN eb_wjx_score AS ews ON eurg.id = ews.urg_id
+		LEFT JOIN dc_school AS ds ON du.school_id = ds.id
+		<where>
+				eurg.flag = 1
+			AND ews.flag = 1
+			<choose>
+				<when test="flag != null and flag == 1">
+			    	<if test="gameGroupNo != null and gameGroupNo > 0">
+						AND eg.group_no = #{gameGroupNo}
+					</if>
+					AND eg.flag IN (1,3)
+			    </when>
+			    <when test="flag != null and flag == 2">
+			    	AND YEARWEEK(date_format(eg.start_time,'%Y-%m-%d')) = YEARWEEK(now())-1
+			    	AND eg.flag IN (1,3)
+			    </when>
+			    <otherwise>
+			    	AND eg.id = (
+						SELECT
+							Max(id) AS id
+						FROM
+							eb_game AS eg
+						WHERE
+							<if test="gameGroupNo != null and gameGroupNo > 0">
+								eg.group_no = #{gameGroupNo}
+							</if>
+								AND eg.flag = 3
+						)
+			    </otherwise>
+			</choose>
+			ORDER BY ews.rank
+			<if test="page != null and size != null">
+				LIMIT #{page},#{size}
+			</if>
+		</where>
+	</select>
+	
+	<select id="countRank" resultType="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			eb_game AS eg
+		LEFT JOIN eb_user_rel_game AS eurg ON eg.id = eurg.game_id
+		LEFT JOIN dc_user AS du ON eurg.user_id = du.id
+		LEFT JOIN eb_wjx_score AS ews ON eurg.id = ews.urg_id
+		LEFT JOIN dc_school AS ds ON du.school_id = ds.id
+		<where>
+				eurg.flag = 1
+			AND ews.flag = 1
+			<choose>
+				<when test="flag != null and flag == 1">
+			    	<if test="gameGroupNo != null and gameGroupNo > 0">
+						AND eg.group_no = #{gameGroupNo}
+					</if>
+					AND eg.flag IN (1,3)
+			    </when>
+			    <when test="flag != null and flag == 2">
+			    	AND YEARWEEK(date_format(eg.start_time,'%Y-%m-%d')) = YEARWEEK(now())-1
+			    	AND eg.flag IN (1,3)
+			    </when>
+			    <otherwise>
+			    	AND eg.id = (
+						SELECT
+							Max(id) AS id
+						FROM
+							eb_game AS eg
+						WHERE
+							<if test="gameGroupNo != null and gameGroupNo > 0">
+								eg.group_no = #{gameGroupNo}
+							</if>
+								AND eg.flag = 3
+						)
+			    </otherwise>
+			</choose>
+			ORDER BY ews.rank
+			<if test="page != null and size != null">
+				LIMIT #{page},#{size}
+			</if>
+		</where>
+	</select>
+	
+	<select id="myRank" resultType="gameInfoPO">
+		SELECT
+			ews.rank AS rank,
+			du.`name` AS `name`,
+			ds.`name` AS school,
+			ews.score AS score
+		FROM
+			eb_game AS eg
+		LEFT JOIN eb_user_rel_game AS eurg ON eg.id = eurg.game_id
+		LEFT JOIN dc_user AS du ON eurg.user_id = du.id
+		LEFT JOIN eb_wjx_score AS ews ON eurg.id = ews.urg_id
+		LEFT JOIN dc_school AS ds ON du.school_id = ds.id
+		<where>
+				eurg.flag = 1
+			AND ews.flag = 1
+			<if test="userId != null and userId > 0">
+				AND eurg.user_id = #{userId}
+			</if>
+			<choose>
+				<when test="flag != null and flag == 1">
+			    	<if test="gameGroupNo != null and gameGroupNo > 0">
+						AND eg.group_no = #{gameGroupNo}
+					</if>
+					AND eg.flag IN (1,3)
+			    </when>
+			    <when test="flag != null and flag == 2">
+			    	AND YEARWEEK(date_format(eg.start_time,'%Y-%m-%d')) = YEARWEEK(now())-1
+			    	AND eg.flag IN (1,3)
+			    </when>
+			    <otherwise>
+			    	AND eg.id = (
+						SELECT
+							Max(id) AS id
+						FROM
+							eb_game AS eg
+						WHERE
+							<if test="gameGroupNo != null and gameGroupNo > 0">
+								eg.group_no = #{gameGroupNo}
+							</if>
+								AND eg.flag = 3
+						)
+			    </otherwise>
+			</choose>
+			ORDER BY ews.score DESC,ews.rank
+		</where>
+	</select>
+</mapper>

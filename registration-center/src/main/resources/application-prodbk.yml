@@ -1,0 +1,19 @@
+server:
+  port: 8102
+spring:
+  application:
+    name: registration-center-bk
+eureka:
+  instance:
+    hostname: registration-center-bk
+    preferIpAddress: true
+    ip-address: 47.97.23.45
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://47.97.23.45:8101/registration-center/eureka/
+    healthcheck:
+      enabled: true
+  server:
+    enableSelfPreservation: false

@@ -1,0 +1,19 @@
+server:
+  port: 8751
+spring:
+  application:
+    name: registration-center
+eureka:
+  instance:
+    hostname: registration-center
+    preferIpAddress: true
+    ip-address: 192.168.1.236
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://192.168.1.236:8752/registration-center/eureka/
+    healthcheck:
+      enabled: true
+  server:
+    enableSelfPreservation: false
