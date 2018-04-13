@@ -50,12 +50,12 @@ eureka:
 amp:
   msg:
     ali:
-      product: Dysmsapi
-      domain: dysmsapi.aliyuncs.com
-      region: cn-hangzhou
-      accesskeyid: LTAI6xttSEFt5sOs
-      accesskeysecret: UdGhK8Bwc4iXniRYZnBLpoyvb3rShF
-      signname: 爱丁集团
+      product: #
+      domain: #
+      region: #
+      accesskeyid: #
+      accesskeysecret: #
+      signname: #
 logging:
   level:
     org:

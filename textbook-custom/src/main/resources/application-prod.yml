@@ -1,12 +1,12 @@
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://47.97.23.45:8101/registration-center/eureka/,http://47.97.23.45:8102/registration-center/eureka/
+      defaultZone: #
     healthcheck:
       enabled: false
   instance:
     preferIpAddress: true
-    ip-address: 47.97.23.45
+    ip-address: #
     leaseRenewalIntervalInSeconds: 1
     leaseExpirationDurationInSeconds: 2
     statusPageUrlPath: /textbook-custom/swagger-ui.html

@@ -2,26 +2,23 @@ spring:
   application:
     name: msg-service
   datasource:
-    url: jdbc:mysql://120.26.164.209:3306/amp?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    url: #
     username: root
     password: 1qaz@WSX
     driver-class-name: com.mysql.jdbc.Driver
-#  data:
-#    mongodb:
-#      uri: mongodb://47.97.23.45:27017/msg
   mvc:
     view:
       prefix: /WEB-INF/jsp/
       suffix: .jsp
   rabbitmq:
-    host: 120.26.164.209
+    host: #
     port: 5672
     username: aiding
     password: aiding
     publisher-confirms: true
     virtual-host: /
   redis:
-    host: 47.97.23.45
+    host: #
     port: 6379
     password: null
     timeout: 0
@@ -39,12 +36,12 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://47.97.23.45:8101/registration-center/eureka/,http://47.97.23.45:8102/registration-center/eureka/
+      defaultZone: #
     healthcheck:
       enabled: false
   instance:
     preferIpAddress: true
-    ip-address: 47.97.23.45
+    ip-address: #
     leaseRenewalIntervalInSeconds: 1
     leaseExpirationDurationInSeconds: 2
     statusPageUrlPath: /msg-service/msg/info
@@ -52,12 +49,12 @@ eureka:
 amp:
   msg:
     ali:
-      product: Dysmsapi
-      domain: dysmsapi.aliyuncs.com
-      region: cn-hangzhou
-      accesskeyid: LTAI6xttSEFt5sOs
-      accesskeysecret: UdGhK8Bwc4iXniRYZnBLpoyvb3rShF
-      signname: 爱丁集团
+      product: #
+      domain: #
+      region: #
+      accesskeyid: #
+      accesskeysecret: #
+      signname: #
 logging:
   level:
     org:

@@ -1,12 +1,12 @@
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://47.97.23.45:8101/registration-center/eureka/,http://47.97.23.45:8102/registration-center/eureka/
+      defaultZone: #
     healthcheck:
       enabled: false
   instance:
     preferIpAddress: true
-    ip-address: 47.97.23.45
+    ip-address: #
     leaseRenewalIntervalInSeconds: 1
     leaseExpirationDurationInSeconds: 2
     statusPageUrlPath: /textbook-service/swagger-ui.html
@@ -17,12 +17,12 @@ spring:
   application:
     name: textbook-service
   datasource:
-    url: jdbc:mysql://120.26.164.209:3306/amp?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    url: #
     username: root
     password: 1qaz@WSX
     driver-class-name: com.mysql.jdbc.Driver
   rabbitmq:
-    host: 120.26.164.209
+    host: #
     port: 5672
     username: aiding
     password: aiding

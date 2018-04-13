@@ -2,19 +2,19 @@ spring:
   application:
     name: order-service
   datasource:
-    url: jdbc:mysql://192.168.1.236:3306/amp?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    url: #
     username: root
     password: 1qaz@WSX
     driver-class-name: com.mysql.jdbc.Driver
   rabbitmq:
-    host: 192.168.1.236
+    host: #
     port: 5672
     username: aiding
     password: aiding
     virtual-host: /
   data:
     mongodb:
-      uri: mongodb://192.168.1.236:27017/order
+      uri: #
   mvc:
     view:
       prefix: /WEB-INF/jsp/
@@ -39,11 +39,11 @@ eureka:
 amp:
   pay:
     ali:
-      notify_url: http://oa.edudigital.cn:16000/order-service/notify/pay/ali
+      notify_url: #
     wx:
-      notify_url: http://oa.edudigital.cn:16000/order-service/notify/pay/wx
-      appid: wx7230f7742993d161
-      mchid: 1269929101
+      notify_url: #
+      appid: #
+      mchid: #
 logging:
   level: 
     com.ibatis: DEBUG

@@ -7,12 +7,12 @@ eureka:
   instance:
     hostname: registration-center
     preferIpAddress: true
-    ip-address: 47.97.23.45
+    ip-address: #
   client:
     registerWithEureka: false
     fetchRegistry: false
     serviceUrl:
-      defaultZone: http://47.97.23.45:8102/registration-center/eureka/
+      defaultZone: #
     healthcheck:
       enabled: true
   server:

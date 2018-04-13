@@ -280,7 +280,7 @@
 		<repository>
 			<id>center</id>
 			<name>maven_dev_group_repo</name>
-			<url>http://47.104.217.137:8081/repository/maven_dev_group_repo/</url>
+			<url>#</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -313,7 +313,7 @@
 		<repository>
 			<id>releases</id>
 			<name>maven-releases</name>
-			<url>http://47.104.217.137:8081/repository/maven_third_repo/</url>
+			<url>#</url>
 		</repository>
 	</distributionManagement>
 
